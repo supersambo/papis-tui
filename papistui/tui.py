@@ -77,7 +77,6 @@ class Tui(object):
         self.keychain = []
 
         # curses
-        curses.set_escdelay(25)
         self.stdscr = curses.initscr()
         curses.noecho()
         curses.cbreak()
