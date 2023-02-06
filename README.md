@@ -1,5 +1,5 @@
 # papis-tui
-**!!! papis-tui is at an highly experimental stage. I have not tested this on any other machine than my own and only using my personal papis configuration and library. Please proceed with caution !!!**
+<sup>**!!! papis-tui is at an highly experimental stage. I have not tested this on any other machine than my own and only using my personal papis configuration and library. Please proceed with caution !!!**<sup>
 
 papis-tui aims to be(come) a highly customizable general purpose **t**erminal **u**ser **i**nterface for the [papis](https://github.com/papis/papis) bibliography manager. 
 
@@ -32,7 +32,7 @@ If there is no configuration file in place, papis-tui will offer to create a min
 
 # Features
 - highly customizable
-- choose between two display styles (table/multiline)
+- choose between two display styles (table/multiline) 
 - open, tag, remove, edit documents
 - search documents
 - sort documents
