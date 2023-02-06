@@ -20,7 +20,6 @@ from papis.commands.edit import run as edit_document
 from papis.commands.rm import run as rm_document
 from papis.commands.update import run as update_document
 from papis.commands.browse import run as browse_document
-from papis.logging import setup as setup_logging
 from papistui.helpers.customargparse import ArgumentParser, HelpCall
 from papistui.helpers.document import Document
 from papistui.helpers.styleparser import StyleParser
@@ -37,10 +36,16 @@ from papistui.features.vim import Vim
 from papistui.features.tagging import process_tags, tag_document
 
 
-# This is used to redirect papis logger to a temporary file
-# in order to avoid it messing up curses when printing to stdout
-tmpfile = tempfile.NamedTemporaryFile()
-setup_logging(50, logfile = tmpfile.name)
+try:
+    # this was introduced recently
+    from papis.logging import setup as setup_logging
+    # This is used to redirect papis logger to a temporary file
+    # in order to avoid it messing up curses when printing to stdout
+    tmpfile = tempfile.NamedTemporaryFile()
+    setup_logging(50, logfile = tmpfile.name)
+
+except:
+    pass
 
 
 
