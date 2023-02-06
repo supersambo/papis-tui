@@ -223,7 +223,7 @@ picktool = papis-tui
 ```
 
 # Special commands
-##copy_to_clipboard
+## copy_to_clipboard
 copy_to_clipboard is used to copy information about a selected document to the clipboard. How this information is formatted depends on the use case and can be fully customized. See some examples below:
 
 ```yaml
@@ -239,7 +239,7 @@ keymappings:
     - yank title
 ```
 
-##vim_send
+## vim_send
 vim_send is similar to copy_to_clipboard and can be configured the same way. Of course, the difference is that vim_send sends parsed string to a vim instance. This feature is highly experimental but should work with both vim and neovim in theory. In order to use this feature with vim you must start vim with the `--servername yourservername` option for it to be detectable. If you prefer to use neovim you must set the following option in your configuration file:
 
 ```yaml
