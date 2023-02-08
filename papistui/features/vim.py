@@ -24,6 +24,8 @@ class Vim(object):
             try:
                 servers = subprocess.check_output(["vim", "--serverlist"])
                 servers = servers.decode("utf-8").splitlines()
+            except:
+                pass
 
         elif self.flavour == "nvim":
             servers = []
