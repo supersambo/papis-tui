@@ -77,12 +77,12 @@ documentlist:
 
 ![image](https://github.com/supersambo/repo_pics/blob/main/multiline.jpg?raw=true)
 
-`papis-tui` injects a few additional methods into the papis Document class in order to display content conveniently. One example of this is the last line. `docs.foreach` allows to display elements of a list enclosed in a specific style while specifying a separator (strings can be split into lists using the `sep` argument).
+`papis-tui` injects a few additional methods into the papis Document class in order to display content conveniently. One example of this is used on the last line above. `docs.foreach` allows to display elements of a list enclosed in a specific style while specifying a separator (strings can be split into lists using the `sep` argument).
 
 ### Tablestyle
 Table is less customizable in terms of styling. Pseudo html styling is not parsed in this case. Rather, one can choose styling attributes for the header (`headerstyle`), selected rows (`cursorrowstyle`), non selected rows (`rowstyle`) and the separator to be placed between columns. Still, style attributes can be combined using the pipe operator (e.g. `bold|red_green|underline`). 
 
-Table style is defined columnwise, whereas each column entry takes three inputs `content` (what is displayed on each row per document), `header` (column title) and a fixed width for each column. Checkout the self-explanatory example below:
+Table style is defined columnwise, where each column entry takes three inputs `content` (what is displayed on each row per document), `header` (column title) and a fixed `width` for each column. Checkout the self-explanatory example below:
 
 ```yaml
 documentlist:
@@ -109,7 +109,7 @@ documentlist:
 ![image](https://github.com/supersambo/repo_pics/blob/main/tablestyle.jpg?raw=true)
 
 ## Keymappings
-Any command available in papis-tui can be mapped to a key or key combination including its arguments. Commands can be mapped to case sensitive single keys (e.g. `j`,`k`, `l`, `J`, `K`, `L`), a combination thereof (e.g. `gg` or even `ggg`), special keys (e.g. `<key_down>`, `key_up`) of modifiers in the following notation `<ctrl-j>`. See an example below:
+Any command including its arguments can be mapped to a key or key combination . Commands can be mapped to case sensitive single keys (e.g. `j`,`k`, `l`, `J`, `K`, `L`), a combination thereof (e.g. `gg` or even `ggg`), special keys (e.g. `<key_down>`, `key_up`) of modifiers in the following notation `<ctrl-j>`. See an example below:
 
 ```yaml
 keymappings:
@@ -127,7 +127,7 @@ keymappings:
   q: quit
 ```
 ### Modifying Keyhints
-Chained keymappings may be hard to remember. Papis-tui therefore displays hints in the bottom right corner, whenever the key you entered matches the start of (a) keychain(s) mapped to specific commands. However, if a command includes various and/or complex arguments, this may get hard to decipher (also, papis-tui may struggle to render it correctly if your arguments include special characters). You may therefore provide a short description of what the command is supposed to do, which will be displayed instead.
+Chained keymappings may be hard to remember. Papis-tui therefore displays hints in the bottom right corner, whenever the key you entered matches the start of (a) keychain(s) mapped to specific commands. However, if a command includes various and/or complex arguments, this becomes dificult to decipher (also, papis-tui may struggle to render it correctly if your arguments include special characters). You may therefore provide a short description of what the command is supposed to do, which will be displayed instead.
 
 For instance, the `open` command accepts the `-d` flag to open a documents folder instead of the files attached. The `-r` argument can be used to filter available options based on the name of the files attached to a document (see `:open --help`). In order to access different options rapidly without having to remember this, you could configure the following keymappings. 
 
@@ -175,7 +175,7 @@ statusbar:
     default: "<black_white> {info["idx"]} < {info["marked"]} < {info["view"]} < {info["items"]}  <black_white>"
 ```
 
-Information content or style can also change depending on the mode you are currently in. For instance if you wanted to change the color of the left side of statusbar when changing modes, you could do something like this:
+Information content or style can also change depending on the mode you are currently in. For instance, if you wanted to change the color of the left side of statusbar when changing modes, you could do something like this:
 
 ```yaml
 statusbar:
@@ -185,7 +185,7 @@ statusbar:
     command: "<black_red> {info["mode_upper"]} <black_red>"
     search: "<black_magenta> {info["mode_upper"]} <black_magenta>"
 ```
-In the above case papis-tui would fall back into the specified default mode, when in `select` mode, because no configuration for this mode is available. 
+In the above case papis-tui would fall back to the specified default mode, when in `select` mode, because no configuration for this mode is available. 
 
 ## search keyword aliases
 Search keyword aliases allow typing queries faster. Instead of typing `author: habermas` you might define an alias `a` for `author:`, `t` for `title:` etc.
@@ -247,7 +247,7 @@ base:
   vimflavour: nvim #defaults to vim
 ```
 
-When invoking the vim_send command for the first time it will connect to a server (if any is available) and send or fail if none is available. If more than one is available it will let you choose one and remember your selection. In case you want to change to another server later you can run `:vim_connect`.
+When invoking the `vim_send` command for the first time it will connect to a server (if any is available) and send the evaluated string, or fail if none is available. If more than one is available, it will let you choose and remembers your selection. In case you want to change to another server later you can run `:vim_connect`.
 
 ## cmd
 `cmd` provides the ability map shortcuts to commands which require mandatory positional arguments. Use cases for this could be `tag` and `sort` or `search`. You may want to hit the `t` key followed by a tag instead of typing `:tag` + *yourtag* in order to tag documents quickly. Similarly you may want to have a shortcut in place to search by *authorname* or *title* or sort your documents. This can be achieved with the following keymappings in place:
