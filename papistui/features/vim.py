@@ -21,9 +21,9 @@ class Vim(object):
         """
 
         if self.flavour == "vim":
-            servers = subprocess.check_output(["vim", "--serverlist"])
-            servers = servers.decode("utf-8").splitlines()
-            return servers
+            try:
+                servers = subprocess.check_output(["vim", "--serverlist"])
+                servers = servers.decode("utf-8").splitlines()
 
         elif self.flavour == "nvim":
             servers = []
@@ -44,7 +44,9 @@ class Vim(object):
                             pass
                     finally:
                         pass
-            return servers
+
+        if servers:
+            return list(dict.fromkeys(servers))
 
     def set_server(self, servername):
         """ Set server to be used upon next send
