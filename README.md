@@ -6,7 +6,7 @@ papis-tui aims to be(come) a highly customizable general purpose **t**erminal **
 Be aware that `papis-tui` is not a full blown bibliography manager but only a "frontend" for your existing [papis](https://github.com/papis/papis) database!
 
 [![image](https://github.com/supersambo/repo_pics/blob/main/papis-tui_overview.jpg?raw=true)](https://www.youtube.com/watch?v=O9VQ-W9cza0)
-<sup>The above image and screencast were created with the [this configuration](https://gist.github.com/supersambo/e90c034393fee09842c7d108b6ff00cc) in place</sup>
+<sup>The above image and [screencast](https://www.youtube.com/watch?v=O9VQ-W9cza0) were created with the [this configuration](https://gist.github.com/supersambo/e90c034393fee09842c7d108b6ff00cc) in place</sup>
 
 
 # Installation
@@ -56,7 +56,7 @@ When the tui is running you can switch between multiline- and table-style by typ
 Similar to papis' native tui everything that is enclosed in curly brackets will get interpreted, so that you can display a documents title like this `{doc.html_escape['title']}`. The only difference is that `papis-tui` evaluates strings in curly brackets as python code, meaning that `{str(1 + 1)}` is a valid expression that will result in `2`. 
 
 ### Multiline
-The multiline display style can take a number of lines that display information about documents using a type of pseudo htmly markup language. Colors and style highly depend on your terminal settings and fonts used. Colors can be used as follows: `<bg>` (background), `<black`, `<red>` `<green>` `<yellow>` `<blue>` `<magenta>` `<cyan>` `<white>` and must always be closed in order to be rendered correctly `<white>text</text>`. Colors can be combined using an underscore in order to control fore- and background e.g. `<red_green>` (`<foreground_background>`). Font variations such as `bold`, `italic` and `underline` can also be used and combined in nested forms:
+The multiline display style can take a number of lines that display information about documents using a type of pseudo htmly markup language. Colors and style highly depend on your terminal settings and fonts used. Colors can be used as follows: `<bg>` (background), `<black`, `<red>` `<green>` `<yellow>` `<blue>` `<magenta>` `<cyan>` `<white>` and must always be closed in order to be rendered correctly `<white>text</white>`. Colors can be combined using an underscore in order to control fore- and background e.g. `<red_green>` (`<foreground_background>`). Font variations such as `bold`, `italic` and `underline` can also be used and combined in nested forms:
 
 ```html
 
