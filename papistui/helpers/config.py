@@ -27,7 +27,7 @@ default_config = {
                 },
                 {"header": "Year", "content": '{doc.html_escape["year"]}', "width": 4},
                 {
-                    "header": "Titel",
+                    "header": "Title",
                     "content": '{doc.html_escape["title"]}',
                     "width": 400,
                 },
