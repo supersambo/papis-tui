@@ -9,9 +9,9 @@ setup(
     author="Stephan Schlögl",
     author_email="stephan@schloegl.net",
     license="GPLv3",
-    url="https://github.com/supersambo/papistui",
+    url="https://github.com/supersambo/papis-tui",
     install_requires=[
-        "papis>=0.11",
+        "papis>=0.12",
         "clipboard",
         "pybtex",
         "neovim-remote",
