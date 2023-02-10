@@ -77,7 +77,7 @@ documentlist:
 
 ![image](https://github.com/supersambo/repo_pics/blob/main/multiline.jpg?raw=true)
 
-`papis-tui` injects a few additional methods into the papis Document class in order to display content conveniently. One example of this is used on the last line above. `docs.foreach` allows to display elements of a list enclosed in a specific style while specifying a separator (strings can be split into lists using the `sep` argument).
+`papis-tui` injects a few additional methods into the papis Document class in order to display content conveniently. One example of this is used on the last line above. `docs.foreach` allows to display elements of a list enclosed in a specific style while specifying a separator `sep` (strings can be split into lists using the `split` argument).
 
 ### Tablestyle
 Table is less customizable in terms of styling. Pseudo html styling is not parsed in this case. Rather, one can choose styling attributes for the header (`headerstyle`), selected rows (`cursorrowstyle`), non selected rows (`rowstyle`) and the separator to be placed between columns. Still, style attributes can be combined using the pipe operator (e.g. `bold|red_green|underline`). 
