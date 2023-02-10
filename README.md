@@ -98,7 +98,7 @@ documentlist:
       header: Year
       width: 4
     - content: '{doc.html_escape["title"]}'
-      header: Titel
+      header: Title
       width: 400
     cursorrowstyle: black_white
     headerstyle: underline|bold
