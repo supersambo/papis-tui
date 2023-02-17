@@ -395,6 +395,8 @@ class Tui(object):
 
         self.statusbar.info = self.doclist.getinfo()
         self.doclist.display()
+        if self.config["infowindow"]["default_on"]:
+            self.info_toggle()
         while True:
             ch = self.doclist.pad.getch()
             if ch == curses.KEY_RESIZE:

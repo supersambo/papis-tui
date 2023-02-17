@@ -199,10 +199,11 @@ commandline:
 With this configuration in place the query `a habermas` gets automatically translated to `author: habermas` before being evaluated.
 
 ## info window
-The info window is located below the documentlist and can be toggled on and of. It is mainly intended for displaying the abstract of the selected document, but of course can be configured to be display something else. You can define as many different views as you want, each one requires a title and `content` field at least. Individual window heights can also be defined and whether content should be linewrapped.
+The info window is located below the documentlist and can be toggled on and of (set `default_on: True` to open it at startup). It is mainly intended for displaying the abstract of the selected document, but of course can be configured to be display something else. You can define as many different views as you want, each one requires a title and `content` field at least. Individual window heights can also be defined and whether content should be linewrapped.
 
 ```yaml
 infowindow:
+  default_on: False
   views:
     abstract:
       content: "{doc['abstract']}"
@@ -212,7 +213,7 @@ infowindow:
       content: "{format_reference(doc)}"
 ```
 
-The `:info_toggle` command can be used to toggle the window on or off and views be changed whith `:info_cycle`. You can scroll up the info_window up or down using `:info_scroll_up` and `:info_scroll_down`.
+The `:info_toggle` command can be used to toggle the window on or off and views be changed whith `:info_cycle`. You can scroll up the info_window up or down using `:info_scroll_up` and `:info_scroll_down`. 
 
 ## Using papis-tui as the papis picker
 In order to use papis-tui as the picker for papis you must specify this in your papis configuration file (not `papistui.yaml`!) under settings, which is usually located in `~/.config/papis/config`:

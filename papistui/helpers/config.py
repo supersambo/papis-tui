@@ -140,6 +140,11 @@ def complete_config(config):
             "documentlist"
         ]["multilinestyle"]["rows"]
 
+    if not "infowindow" in config:
+        config["infowindow"] = {}
+
+    config["infowindow"].setdefault("default_on", False)
+
     return config
 
 
