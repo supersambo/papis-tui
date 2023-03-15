@@ -44,7 +44,7 @@ def process_sortkeys(sortkeys):
 
 def sort_multiple_keys(docs, sortkeys):
     """
-    Sort documents based on multiple keys 
+    Sort documents based on multiple keys
     Trailing '-' minus indicates decreasing sort
 
     :param docs: list of documents

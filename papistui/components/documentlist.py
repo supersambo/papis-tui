@@ -32,7 +32,6 @@ class DocumentList(object):
         self.view = items
         self.marked = []
         self.selected_doc = self.view[0]
-        self.sortkeys = self.config["documentlist"]["sortkeys"]
 
         # positions and dimensions
         self._size = initsize
@@ -43,6 +42,9 @@ class DocumentList(object):
         self.rownr = self.getrownr()  # number of options that fit on window
 
         self.init_pad()
+        self.sortkeys = self.config["documentlist"]["defaultsort"]
+        if len(self.sortkeys) > 0:
+            self.sort(self.sortkeys)
 
     @property
     def size(self):

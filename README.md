@@ -104,6 +104,7 @@ documentlist:
     headerstyle: underline|bold
     rowstyle: white_bg
     separator: " \u2502 "
+    defaultsort: "time-added-"
 ```
 
 ![image](https://github.com/supersambo/repo_pics/blob/main/tablestyle.jpg?raw=true)

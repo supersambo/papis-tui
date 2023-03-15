@@ -113,7 +113,7 @@ def complete_config(config):
     config["documentlist"].setdefault("marked-icon", "*")
     config["documentlist"].setdefault("defaultstyle", "multiline")
     config["documentlist"].setdefault("tagfield", "tags")
-    config["documentlist"].setdefault("sortkeys", "")
+    config["documentlist"].setdefault("defaultsort", "")
 
     if "defaultsort" in config["documentlist"]:
         config["documentlist"]["defaultsort"] = config["documentlist"][
