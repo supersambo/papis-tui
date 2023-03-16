@@ -1,5 +1,5 @@
 # papis-tui
-<sup>**!!! papis-tui is at an highly experimental stage. I have not tested this on any other machine than my own and only using my personal papis configuration and library. Please proceed with caution !!!**<sup>
+<sup>**!!! papis-tui is at an highly experimental stage. I have not tested this on any other machine than my own and only using my personal papis configuration and library. Please proceed with caution, papis-tui can delete documents in your database. Always have a backup in place !!!**<sup>
 
 papis-tui aims to be(come) a highly customizable general purpose **t**erminal **u**ser **i**nterface for the [papis](https://github.com/papis/papis) bibliography manager.
 
