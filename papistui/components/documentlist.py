@@ -61,7 +61,7 @@ class DocumentList(object):
         self.pad.resize(self._size["sizey"], self.size["sizex"])
         self.rownr = self.getrownr()
         if self.selected_win_idx >= self.rownr:
-            self.top_idx = self.selected_idx - self.rownr + 1
+            self._top_idx = self.selected_idx - self.rownr + 1
             self.selected_win_idx = self.rownr - 1
         self.display()
 
