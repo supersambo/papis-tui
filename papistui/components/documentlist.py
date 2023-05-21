@@ -384,8 +384,8 @@ class DocumentList(object):
             self.style = "multiline"
             self.rownr = self.getrownr()
             if self.selected_win_idx >= self.rownr:
-                self.top_idx = self.selected_idx
-                self.selected_win_idx = 0
+                self._selected_win_idx = self.rownr - 1
+                self.top_idx = self.selected_idx - self.rownr + 1
 
         return {"exit_status": 0}
 
