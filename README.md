@@ -15,6 +15,11 @@ Install the github version via pip:
 pip install git+https://github.com/supersambo/papis-tui.git@main
 ```
 
+**Note:** If you install papis and papistui using `pipx`, you have to inject papistui into the `venv` where papis lives in order for it to register papistui as picker:
+```
+pipx inject papis papistui
+```
+
 # Quickstart
 Once installed, you should be able to start papis-tui from the command line as:
 
