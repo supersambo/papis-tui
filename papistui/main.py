@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import click
-
 import papis.pick
 from papis.document import Document
 from papistui.helpers.config import (

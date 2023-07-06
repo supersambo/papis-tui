@@ -726,52 +726,55 @@ class Tui(object):
 
         :param command: str command to be executed
         """
-        commands = shlex.split(command.strip())
-        try:
-            args = self.commandparser.parse_args(commands)
-            result = args.func(args)  # call the default function
-            if result is None:  # try to avoid by returning exit status
-                self.commandinfo.destroy()
-                if not self.helpwindow.active:
-                    self.doclist.display()
-                    self.statusbar.info = self.doclist.getinfo()
-                if self.infowindow.active:
-                    self.infowindow.display()
-            elif result["exit_status"] == 0:
-                if not self.helpwindow.active:
-                    if self.mode == "select":
-                        self.commandinfo.destroy()
-                        self.resize()
-                    self.mode = "normal"
-
-                    self.doclist.display()
-                    self.statusbar.info = self.doclist.getinfo()
+        if command.startswith("papis "):
+            self.papis_cmd(command)
+        else:
+            commands = shlex.split(command.strip())
+            try:
+                args = self.commandparser.parse_args(commands)
+                result = args.func(args)  # call the default function
+                if result is None:  # try to avoid by returning exit status
+                    self.commandinfo.destroy()
+                    if not self.helpwindow.active:
+                        self.doclist.display()
+                        self.statusbar.info = self.doclist.getinfo()
                     if self.infowindow.active:
                         self.infowindow.display()
-                    if "message" in result:
-                        self.message = result["message"]
-                    elif self.messagebar.active:
-                        self.messagebar.destroy()
-            elif result["exit_status"] == 1:
-                self.command = command
-                self.raise_commandinfo(info=result["options"])
-                default = result["default"] if "default" in result else ""
-                self.select_mode(default=default)
-            elif result["exit_status"] == 2:
+                elif result["exit_status"] == 0:
+                    if not self.helpwindow.active:
+                        if self.mode == "select":
+                            self.commandinfo.destroy()
+                            self.resize()
+                        self.mode = "normal"
+
+                        self.doclist.display()
+                        self.statusbar.info = self.doclist.getinfo()
+                        if self.infowindow.active:
+                            self.infowindow.display()
+                        if "message" in result:
+                            self.message = result["message"]
+                        elif self.messagebar.active:
+                            self.messagebar.destroy()
+                elif result["exit_status"] == 1:
+                    self.command = command
+                    self.raise_commandinfo(info=result["options"])
+                    default = result["default"] if "default" in result else ""
+                    self.select_mode(default=default)
+                elif result["exit_status"] == 2:
+                    self.commandinfo.destroy()
+                    self.resize()
+                    self.mode = "normal"
+                    self.message = result["message"]
+
+            except HelpCall as h:
+                self.raise_commandinfo(info=h.helpmessage())
+            except Exception as error:
                 self.commandinfo.destroy()
                 self.resize()
-                self.mode = "normal"
-                self.message = result["message"]
-
-        except HelpCall as h:
-            self.raise_commandinfo(info=h.helpmessage())
-        except Exception as error:
-            self.commandinfo.destroy()
-            self.resize()
-            self.doclist.display()
-            info = str(error).splitlines()[0]
-            info = re.sub("\(.*$", "", info)
-            self.message = (info, "error")
+                self.doclist.display()
+                info = str(error).splitlines()[0]
+                info = re.sub("\(.*$", "", info)
+                self.message = (info, "error")
 
     def raise_commandinfo(self, info):
         """
@@ -806,6 +809,25 @@ class Tui(object):
             tag_document(doc, tags, self.tagfield)
 
         return {"exit_status": 0}
+
+    def papis_cmd(self, command):
+        """ Run a papis command
+
+        :returns dict with exit status
+        """
+        string = self.styleparser.evaluate(command, doc=self.doclist.selected_doc, docs=self.doclist.marked)
+        cmd = shlex.split(string)
+
+        curses.endwin()
+        try:
+            run = subprocess.Popen(cmd, shell = False)
+            run.wait()
+            self.stdscr.refresh()
+        except:
+            self.stdscr.refresh()
+            self.resize()
+            self.doclist.display()
+            self.message = ("Execution of papis command failed", "error")
 
     def setup_parser(self):
         """ Registers all the available commands to an argparse subparser """
@@ -922,6 +944,14 @@ class Tui(object):
         tag.add_argument("-s", "--selected", help="Force to tag only selected document even if some are marked.", action="store_true")
         tag.set_defaults(func=self.tag)
 
+        papis_cmd = subparsers.add_parser("papis", description="Run a papis command")
+        papis_cmd.add_argument(
+            "cmd",
+            help="Command arguments",
+            nargs="+",
+            type=str,
+        )
+        papis_cmd.set_defaults(func=self.papis_cmd)
 
         opn = subparsers.add_parser(
             "open", description="Open file attached to document"

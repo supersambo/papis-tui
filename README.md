@@ -267,13 +267,25 @@ keymappings:
   st: cmd -f 'title: '
 ```
 
+## papis (calling papis from within papis-tui)
+Most `papis` commands and command arguments are not implemented natively in `papis-tui`. Instead, the focus is to provide a useful and costumizable user interface. However, `papis` can be called from within `papis-tui`, in the same manner one would do from the command line. This has the advantage that most features (including papis plugins) are available from within `papis-tui` and can be mapped to keys. In order to indicate which document a command should apply to, the following syntax can be used. 
+
+``` yaml
+keymappings:
+  e: papis edit papis_id:{doc['papis_id']} -e gedit
+```
+
+Here, `doc` resolves to the currently selected document and the `papis_id:...` syntax can be leveraged to call papis on one specific document. `docs` is also available as variable holding a list of all currently marked documents. Unfortunately, there doesn't seem to exist a syntax similar to `papis_id:...` that allows identify a set of documents yet.   
+
 # Roadmap
 Some ideas I'd like to implement some day (in no particular order of relevance):
+
 - [ ] Handle known bugs (see below)
-- [ ] Implement papis `addto` command
-- [ ] Implement papis `merge` command
-- [ ] Implement papis `mv` command
-- [ ] Implement papis `update` command
+- [X] Implement a general papis command
+- [ ] ~~Implement papis `addto` command~~ 
+- [ ] ~~Implement papis `merge` command~~
+- [ ] ~~Implement papis `mv` command~~
+- [ ] ~~Implement papis `update` command~~
 - [ ] add options `--file` and `--notes` to `rm` command.
 - [ ] allow unicode input on command line
 - [ ] save per session command history (access via `<key_up>`) on command line

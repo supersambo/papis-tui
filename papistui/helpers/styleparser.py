@@ -353,7 +353,7 @@ class StyleParser(HTMLParser):
             result.append({"eval": False, "string": istring})
         return result
 
-    def evaluate(self, strings, doc=None, info=None):
+    def evaluate(self, strings, doc=None, docs=None, info=None):
         """ Evaluate content in curly braces
 
         :param strings: str to be evaluated
