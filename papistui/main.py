@@ -30,7 +30,7 @@ import sys
 )
 @click.help_option("--help", "-h")
 def run(library, config, debug):
-    """ A curses based TUI for papis """
+    """A curses based TUI for papis"""
 
     if not check_config(config):
         print("No configuration file found in {}".format(config_file_name(config)))
@@ -58,7 +58,7 @@ def run(library, config, debug):
 
 
 def pick(options):
-    """ Run tui to pick an option from list
+    """Run tui to pick an option from list
 
     :param options: list of documents from which to choose from
     :return chosen option

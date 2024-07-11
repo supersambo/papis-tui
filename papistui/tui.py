@@ -1,13 +1,6 @@
 import re
-import time
-import sys
 import io
 import os
-import argparse
-import traceback
-import logging
-import locale
-import subprocess
 import shlex
 import curses
 import clipboard
@@ -18,7 +11,6 @@ from papis.api import open_file
 from papis.api import open_dir
 from papis.commands.edit import run as edit_document
 from papis.commands.rm import run as rm_document
-from papis.commands.update import run as update_document
 from papis.commands.browse import run as browse_document
 from papistui.helpers.customargparse import ArgumentParser, HelpCall
 from papistui.helpers.document import Document

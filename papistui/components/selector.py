@@ -12,8 +12,6 @@ scroll_up, scroll_down, jump_to_top or jump_to_bottom
 
 """
 
-
-
 import curses
 import curses.textpad
 from papistui.helpers.keymappings import KeyMappings

@@ -1,12 +1,11 @@
 import curses
-import re
 from itertools import cycle
 from papistui.helpers.styleparser import StyleParser
 
 
 class InfoWindow(object):
     def __init__(self, stdscr, config):
-        """ Constructur method
+        """Constructur method
 
         :param stdscr: curses stdscr (full screen)
         :param config: configuration dictionary
@@ -42,7 +41,7 @@ class InfoWindow(object):
 
     @yscroll.setter
     def yscroll(self, yscroll):
-        """ Set scroll position and display
+        """Set scroll position and display
 
         :param yscroll: integer presenting idx from which to start
         """
@@ -61,7 +60,7 @@ class InfoWindow(object):
             self.display()
 
     def activate(self, view=None):
-        """ Calculate size and activate window
+        """Calculate size and activate window
 
         :param view: name of view to be displayed, defaults to None
         """

@@ -4,7 +4,7 @@ from papistui.helpers.styleparser import StyleParser
 
 class StatusBar(object):
     def __init__(self, initsize, stdscr, config):
-        """ Constructor method
+        """Constructor method
 
         :param initsize: dict with initial size and position
         :param stdscr: curses stdscr (full screen)
@@ -23,7 +23,7 @@ class StatusBar(object):
 
     @size.setter
     def size(self, size):
-        """ Resize, reposition and display
+        """Resize, reposition and display
 
         :param size: dict containing size and position
         """
@@ -42,7 +42,7 @@ class StatusBar(object):
         self.display()
 
     def display(self):
-        """ Format statusbar info based on mode and display """
+        """Format statusbar info based on mode and display"""
 
         self.pad.erase()
         left, right = ("", "")

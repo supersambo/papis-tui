@@ -3,7 +3,7 @@ import re
 
 
 def tag_document(doc, tags, tagfield):
-    """ Add or remove tag from document
+    """Add or remove tag from document
 
     :param doc: document to be tagged
     :param tags: list of tags to be added or removed
@@ -26,7 +26,7 @@ def tag_document(doc, tags, tagfield):
 
 
 def process_tags(tags):
-    """ Preprocess list of tags
+    """Preprocess list of tags
 
     :param tags: list of tags
     :return list of tuples including tags and boolean to whether add (True) or remove (False)
@@ -40,4 +40,3 @@ def process_tags(tags):
         else:
             result.append((tag, True))
     return result
-
