@@ -46,7 +46,7 @@ If there is no configuration file in place, papis-tui will offer to create a min
 - ...
 
 # Configuration
-`papis-tui` is configured via a YAML configuration file in your papis config folder (something like `~/.config/papis/papistui.yaml`). Configuration options are not yet documented extensively. However when starting papis-tui without a config file in place, it will offer to create a default config file, which is a good starting point to tinker around. Alternatively, you can also check out my personal config file [here](https://gist.github.com/supersambo/e90c034393fee09842c7d108b6ff00cc).
+`papis-tui` is configured via a YAML configuration file in your papis config folder (something like `~/.config/papis/papistui.yaml`). Configuration options are not yet documented extensively. However when starting papis-tui without a config file in place, it will offer to create a default config file, which is a good starting point to tinker around. Alternatively, you can also check out config file used for the screencast above [here](https://gist.github.com/supersambo/e90c034393fee09842c7d108b6ff00cc).
 
 ## Configure display styles
 `papis-tui` offers two different styles for displaying information about the documents in your library. 'multiline' mimicks papis native tui and displays information about documents on several lines, whereas 'table' shows information in columns on one line per document. I personally prefer 'multiline', which is why 'table'-style is somewhat neglected. The default display style can be configured in the `documentlist` section of your config file like this:
@@ -205,7 +205,7 @@ commandline:
 With this configuration in place the query `a habermas` gets automatically translated to `author: habermas` before being evaluated.
 
 ## info window
-The info window is located below the documentlist and can be toggled on and of (set `default_on: True` to open it at startup). It is mainly intended for displaying the abstract of the selected document, but of course can be configured to be display something else. You can define as many different views as you want, each one requires a title and `content` field at least. Individual window heights can also be defined and whether content should be linewrapped.
+The info window is located below the documentlist and can be toggled on and of (set `default_on: True` to open it at startup). It is mainly intended for displaying the abstract of the selected document, but of course can be configured to be display something else. You can define as many different views as you want, each one requires a title and `content` field at least. Individual window heights can also be defined and as well as whether content should be linewrapped.
 
 ```yaml
 infowindow:
@@ -247,7 +247,7 @@ keymappings:
 ```
 
 ## vim_send
-vim_send is similar to copy_to_clipboard and can be configured the same way. Of course, the difference is that vim_send sends parsed string to a vim instance. This feature is highly experimental but should work with both vim and neovim in theory. In order to use this feature with vim you must start vim with the `--servername yourservername` option for it to be detectable. If you prefer to use neovim you must set the following option in your configuration file:
+vim_send is similar to copy_to_clipboard and can be configured the same way. Of course, the difference is that vim_send sends parsed string to a vim instance. This feature is highly experimental but should work with both vim and neovim in theory. In order to use this feature with vim you must start vim with the `--servername yourservername` option for it to be detectable. Neovim does not require any startup flags, but you must set the following option in your configuration file to use it:
 
 ```yaml
 base:
@@ -275,7 +275,7 @@ keymappings:
   e: papis edit papis_id:{doc['papis_id']} -e gedit
 ```
 
-Here, `doc` resolves to the currently selected document and the `papis_id:...` syntax can be leveraged to call papis on one specific document. `docs` is also available as variable holding a list of all currently marked documents. Unfortunately, there doesn't seem to exist a syntax similar to `papis_id:...` that allows identify a set of documents yet.   
+Here, `doc` resolves to the currently selected document and the `papis_id:...` syntax can be leveraged to call papis on one specific document. `docs` is also available as variable holding a list of all currently marked documents. Unfortunately, there doesn't seem to exist a syntax similar to `papis_id:...` that allows identify a set of documents yet. 
 
 # Roadmap
 Some ideas I'd like to implement some day (in no particular order of relevance):
