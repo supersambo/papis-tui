@@ -12,7 +12,7 @@ setup(
     url="https://github.com/supersambo/papis-tui",
     install_requires=[
         "papis>=0.12",
-        "clipboard",
+        "pyperclip",
         "pybtex",
         "neovim-remote",
     ],

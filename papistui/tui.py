@@ -3,15 +3,16 @@ import io
 import os
 import shlex
 import curses
-import clipboard
 import tempfile
 from curses.textpad import Textbox
+
 import papis.api as api
 from papis.api import open_file
 from papis.api import open_dir
 from papis.commands.edit import run as edit_document
 from papis.commands.rm import run as rm_document
 from papis.commands.browse import run as browse_document
+
 from papistui.helpers.customargparse import ArgumentParser, HelpCall
 from papistui.helpers.document import Document
 from papistui.helpers.styleparser import StyleParser
@@ -702,11 +703,19 @@ class Tui(object):
             if value == "":
                 return {"exit_status": 2, "message": ("Nothing to copy", "error")}
             else:
-                clipboard.copy(value)
-                return {
-                    "exit_status": 0,
-                    "message": ("Copied string to clipboard", "success"),
-                }
+                try:
+                    import pyperclip
+
+                    pyperclip.copy(value)
+                    return {
+                        "exit_status": 0,
+                        "message": ("Copied string to clipboard", "success"),
+                    }
+                except ImportError:
+                    return {
+                        "exit_status": 2,
+                        "message": ("pyperclip is not available", "error"),
+                    }
         else:
             return {
                 "exit_status": 2,
