@@ -1,0 +1,68 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling>=1.10.0"]
+
+[project]
+name = "papistui"
+version = "0.1"
+description = "Terminal user interface (TUI) for Papis"
+readme = "README.md"
+keywords = [
+    "bibtex",
+    "biliography",
+    "cli",
+    "management",
+    "papis",
+    "tui",
+]
+license = { text = "GPL-3.0-or-later" }
+maintainers = [{ name = "Stephan Schlögl", email = "stephan@schloegl.net" }]
+authors = [{ name = "Stephan Schlögl", email = "stephan@schloegl.net" }]
+requires-python = ">=3.8"
+classifiers = [
+    "Environment :: Console",
+    "Environment :: Console :: Curses",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "neovim-remote",
+    "papis>=0.12",
+    "pybtex",
+    "pyperclip",
+]
+
+[project.urls]
+Repository = "https://github.com/supersambo/papis-tui"
+
+[project.optional-dependencies]
+develop = [
+    "pytest",
+    "pytest-cov",
+    "sphinx",
+    "sphinx-click",
+    "sphinx_rtd_theme",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["papis"]
+
+[project.scripts]
+papis-tui = "papistui.main:run"
+
+[project.entry-points."papis.picker"]
+papis-tui = "papistui.main:Picker"
+
+[project.entry-points."papis.command"]
+tui = "papistui.main:run"
