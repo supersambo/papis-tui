@@ -18,7 +18,7 @@ from papistui.helpers.keymappings import KeyMappings
 from papistui.helpers.config import get_config
 
 
-class Screen(object):
+class Screen:
     UP = -1
     DOWN = 1
 
@@ -35,7 +35,8 @@ class Screen(object):
             top: Available top line position for current page (used on scrolling)
             bottom: Available bottom line position for whole pages (as length of items)
             current: Current highlighted line number (as window cursor)
-            page: Total page count which being changed corresponding to result of a query (starts from 0)
+            page: Total page count which being changed corresponding to result
+            of a query (starts from 0)
 
             ┌--------------------------------------┐
             |1. Item                               |
@@ -98,9 +99,9 @@ class Screen(object):
             self.input_stream()
         except KeyboardInterrupt:
             pass
-        finally:
-            curses.endwin()
-            return self.current
+
+        curses.endwin()
+        return self.current
 
     def input_stream(self):
         """Waiting an input and run a proper method according to type of input"""
@@ -109,7 +110,7 @@ class Screen(object):
             self.display()
 
             ch = self.window.getch()
-            key = [ch] if len(keychain) == 0 else keychain + [ch]
+            key = [ch] if len(keychain) == 0 else [*keychain, ch]
             if self.km.check("scroll_down", key):
                 self.scroll(self.DOWN)
             elif self.km.check("scroll_up", key):
@@ -137,7 +138,8 @@ class Screen(object):
             self.top += direction
             return
         # Down direction scroll overflow
-        # next cursor position touch the max lines, but absolute position of max lines could not touch the bottom
+        # next cursor position touch the max lines, but absolute position of
+        # max lines could not touch the bottom
         if (
             (direction == self.DOWN)
             and (next_line == self.max_lines)
@@ -151,7 +153,8 @@ class Screen(object):
             self.current = next_line
             return
         # Scroll down
-        # next cursor position is above max lines, and absolute position of next cursor could not touch the bottom
+        # next cursor position is above max lines, and absolute position of
+        # next cursor could not touch the bottom
         if (
             (direction == self.DOWN)
             and (next_line < self.max_lines)
@@ -165,13 +168,15 @@ class Screen(object):
         current_page = (self.top + self.current) // self.max_lines
         next_page = current_page + direction
         # The last page may have fewer items than max lines,
-        # so we should adjust the current cursor position as maximum item count on last page
+        # so we should adjust the current cursor position as maximum item
+        # count on last page
         if next_page == self.page:
             self.current = min(self.current, self.bottom % self.max_lines - 1)
 
         # Page up
         # if current page is not a first page, page up is possible
-        # top position can not be negative, so if top position is going to be negative, we should set it as 0
+        # top position can not be negative, so if top position is going
+        # to be negative, we should set it as 0
         if (direction == self.UP) and (current_page > 0):
             self.top = max(0, self.top - self.max_lines)
             return

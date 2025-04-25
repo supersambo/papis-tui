@@ -1,13 +1,8 @@
 import io
 import six
 import re
-from papis.document import Document
-import pybtex.database.input.bibtex
-import pybtex.database.input.bibyaml
-import pybtex.plugin
-import pybtex.errors
+
 from papis.bibtex import to_bibtex
-import papis.api as api
 
 
 def format_reference(docs, style="plain", backend="plaintext", output="reference"):
@@ -15,16 +10,25 @@ def format_reference(docs, style="plain", backend="plaintext", output="reference
 
     :param docs: documents to be processed
     :param style: citation style, defaults to "plain"
-    :param backend: str not yet implemented (only plaintext works) 'plaintext', 'html', 'latex' or 'markdown', defaults to "plaintext"
+    :param backend: str not yet implemented (only plaintext works)
+        'plaintext', 'html', 'latex' or 'markdown'. (defaults to 'plaintext')
     :param output: str either 'reference' or 'intext' citation, defaults to "reference"
     """
-    if type(docs) != list:
+    if type(docs) is not list:
         docs = [docs]
 
-    pybtex.errors.set_strict_mode(False)
-    pybtex_style = pybtex.plugin.find_plugin("pybtex.style.formatting", style)()
-    pybtex_backend = pybtex.plugin.find_plugin("pybtex.backends", backend)()
-    pybtex_parser = pybtex.database.input.bibtex.Parser()
+    from pybtex.errors import set_strict_mode
+
+    set_strict_mode(False)
+
+    from pybtex.plugin import find_plugin
+
+    pybtex_style = find_plugin("pybtex.style.formatting", style)()
+    pybtex_backend = find_plugin("pybtex.backends", backend)()
+
+    from pybtex.database.input.bibtex import Parser
+
+    pybtex_parser = Parser()
 
     bibtex = ""
     for doc in docs:
@@ -41,10 +45,9 @@ def format_reference(docs, style="plain", backend="plaintext", output="reference
         lines = value.splitlines()
         for line in lines:
             if output == "reference":
-                results.append(re.sub("^\[.*\]\s", "", line))
+                results.append(re.sub(r"^\[.*\]\s", "", line))
             if output == "intext":
-                results.append(re.sub("^\[", "", re.sub("\]\s.*", "", line)))
+                results.append(re.sub(r"^\[", "", re.sub(r"\]\s.*", "", line)))
 
-    #currently only applied to one document at a time
+    # currently only applied to one document at a time
     return results[0]
-

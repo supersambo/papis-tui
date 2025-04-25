@@ -37,7 +37,9 @@ default_config = {
     "statusbar": {
         "left": {"default": '<black_white> {info["mode_upper"]} <black_white>'},
         "right": {
-            "default": '<black_white> {info["idx"]} < {info["marked"]} < {info["view"]} < {info["items"]}  <black_white>'
+            "default": (
+                '<black_white> {info["idx"]} < {info["marked"]} '
+                '< {info["view"]} < {info["items"]}  <black_white>')
         },
     },
     "keymappings": {
@@ -60,7 +62,8 @@ default_config = {
 def config_file_name(file_name=None, include_path=True):
     """Return the filename of the configuration file
 
-    :param file_name: str force a specific filename, defaults to None and returns default
+    :param file_name: str force a specific filename, defaults to None and
+        returns default
     :param include_path: bool whether to include filepath, defaults to True
     :return str filename
     """
@@ -140,7 +143,7 @@ def complete_config(config):
             "documentlist"
         ]["multilinestyle"]["rows"]
 
-    if not "infowindow" in config:
+    if "infowindow" not in config:
         config["infowindow"] = {}
 
     config["infowindow"].setdefault("default_on", False)
@@ -156,7 +159,7 @@ def get_config(file_name=None):
     """
 
     if os.path.exists(config_file_name(file_name)):
-        with open(config_file_name(file_name), "r") as f:
+        with open(config_file_name(file_name)) as f:
             config = yaml.safe_load(f)
 
         return complete_config(config)

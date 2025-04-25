@@ -3,7 +3,7 @@ from itertools import cycle
 from papistui.helpers.styleparser import StyleParser
 
 
-class InfoWindow(object):
+class InfoWindow:
     def __init__(self, stdscr, config):
         """Constructur method
 
@@ -22,11 +22,11 @@ class InfoWindow(object):
             # check if config file has views section
             self.views = self.config["infowindow"]["views"]
             self.enabled = True
-        except:
+        except KeyError:
             self.enabled = False
 
         if self.enabled:
-            self.viewnames = [view for view in self.views]
+            self.viewnames = list(self.views)
             self.iterview = cycle(self.views)
             self.view = next(self.iterview)
             for view in self.views:

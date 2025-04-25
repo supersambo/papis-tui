@@ -33,7 +33,7 @@ def run(library, config, debug):
     """A curses based TUI for papis"""
 
     if not check_config(config):
-        print("No configuration file found in {}".format(config_file_name(config)))
+        print(f"No configuration file found in {config_file_name(config)}")
         answer = input(
             "Dow you want to create a minimal default configuration file? (Y/n)"
         )
@@ -80,7 +80,7 @@ def pick(options):
             else:
                 return selection
         else:
-            display_options = [re.sub(".*/", "", i) for i in options]
+            display_options = [re.sub(r".*/", "", i) for i in options]
             screen = Screen(display_options)
             selection = screen.run()
             return options[selection]

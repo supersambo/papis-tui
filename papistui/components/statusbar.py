@@ -2,7 +2,7 @@ import curses
 from papistui.helpers.styleparser import StyleParser
 
 
-class StatusBar(object):
+class StatusBar:
     def __init__(self, initsize, stdscr, config):
         """Constructor method
 

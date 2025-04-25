@@ -1,5 +1,4 @@
 import argparse
-import sys
 
 
 class HelpCall(Exception):
@@ -38,7 +37,8 @@ class ArgumentParser(argparse.ArgumentParser):
 
     def print_help(self):
         """
-        Overwrite print_help message so it does not mess up curses and raise HelpCall Exception instead
+        Overwrite print_help message so it does not mess up curses and raise
+        HelpCall Exception instead
 
         :raises HelpCall
         """

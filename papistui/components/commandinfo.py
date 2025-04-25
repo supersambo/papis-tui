@@ -2,7 +2,7 @@ import curses
 from papistui.helpers.styleparser import StyleParser
 
 
-class CommandInfo(object):
+class CommandInfo:
     def __init__(self, stdscr):
         """Constructor method
 
