@@ -1,6 +1,6 @@
 """
 This class is only invoked from the Picker class whenever a picked document has
-severeal options to choose from. For instance if ``papis open`` is called but the
+several options to choose from. For instance if ``papis open`` is called but the
 file has several files attached.
 
 This is only a slightly modified version of the example in the following repository:

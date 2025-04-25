@@ -4,11 +4,12 @@ import argparse
 class HelpCall(Exception):
     def __init__(self, message):
         """ Constructor method
-        This exception ist made to be catched by papistui.tui.handle_command in order
+
+        This exception is made to be caught by ``papistui.tui.handle_command`` in order
         to by distinguished from other parsing errors. Help message will then be
         displayed in the commandinfo window
 
-        :param message: the error message to be catched
+        :param message: the error message to be caught
         """
 
         self.message = message

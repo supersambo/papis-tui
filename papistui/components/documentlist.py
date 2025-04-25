@@ -40,7 +40,7 @@ class DocumentList:
         self._top_idx = 0  # index of the first document in items idx_top_idx_itm
         self._selected_win_idx = 0  # position of selected option on window idx_sel_win
         self.selected_idx = 0  # index of selected_win_idx item in item list idx_sel_itm
-        self.bottom = len(self.view)  # lenght of items in view
+        self.bottom = len(self.view)  # length of items in view
         self.rownr = self.getrownr()  # number of options that fit on window
 
         self.init_pad()
@@ -167,7 +167,7 @@ class DocumentList:
         """
 
         # Down direction scroll overflow
-        # next cursor position touchs the max lines, but absolute position
+        # next cursor position touches the max lines, but absolute position
         # of max lines could not touch the bottom
         if (
             self.selected_win_idx + 1 == self.rownr

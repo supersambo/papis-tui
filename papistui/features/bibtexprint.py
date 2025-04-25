@@ -6,7 +6,7 @@ from papis.bibtex import to_bibtex
 
 
 def format_reference(docs, style="plain", backend="plaintext", output="reference"):
-    """ Very experimental citation formater
+    """ Very experimental citation formatter
 
     :param docs: documents to be processed
     :param style: citation style, defaults to "plain"

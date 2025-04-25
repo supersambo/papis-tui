@@ -95,3 +95,8 @@ ignore = [
 docstring-quotes = "double"
 inline-quotes = "double"
 multiline-quotes = "double"
+
+[tool.typos.default.extend-words]
+commandbox = "commandbox"
+ot = "ot"
+ser = "ser"

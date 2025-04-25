@@ -5,7 +5,7 @@ from papistui.helpers.styleparser import StyleParser
 
 class InfoWindow:
     def __init__(self, stdscr, config):
-        """Constructur method
+        """Constructor method
 
         :param stdscr: curses stdscr (full screen)
         :param config: configuration dictionary
