@@ -1,5 +1,4 @@
 import io
-import six
 import re
 
 from papis.bibtex import to_bibtex
@@ -34,8 +33,10 @@ def format_reference(docs, style="plain", backend="plaintext", output="reference
     for doc in docs:
         bibtex += "\n" + to_bibtex(doc)
 
-    data = pybtex_parser.parse_stream(six.StringIO(bibtex))
-    data_formatted = pybtex_style.format_entries(six.itervalues(data.entries))
+    from io import StringIO
+
+    data = pybtex_parser.parse_stream(StringIO(bibtex))
+    data_formatted = pybtex_style.format_entries(data.entries.values())
     out = io.StringIO()
     pybtex_backend.write_to_stream(data_formatted, out)
     value = out.getvalue()
