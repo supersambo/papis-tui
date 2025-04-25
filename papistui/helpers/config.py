@@ -1,5 +1,7 @@
 import os
+
 import yaml
+
 import papis.config
 
 default_config = {

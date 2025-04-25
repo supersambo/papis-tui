@@ -1,11 +1,10 @@
 import curses
 import re
 
-from papis.docmatcher import DocMatcher
 from papis.database.cache import match_document
-
-from papistui.helpers.styleparser import StyleParser
+from papis.docmatcher import DocMatcher
 from papistui.features.sorting import sort_multiple_keys
+from papistui.helpers.styleparser import StyleParser
 
 
 class DocumentList:

@@ -79,6 +79,7 @@ select = [
     "E",   # pycodestyle
     "F",   # pyflakes
     "G",   # flake8-logging-format
+    "I",   # flake8-isort
     "N",   # pep8-naming
     "Q",   # flake8-quotes
     "RUF", # ruff
@@ -90,6 +91,9 @@ ignore = [
     "B019",
     "N818",
 ]
+
+[tool.ruff.lint.isort]
+known-first-party = ["papis", "papistui"]
 
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"

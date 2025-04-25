@@ -1,4 +1,5 @@
 import curses
+
 from papistui.helpers.styleparser import StyleParser
 
 

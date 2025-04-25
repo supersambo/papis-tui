@@ -1,5 +1,6 @@
 import curses
 from itertools import cycle
+
 from papistui.helpers.styleparser import StyleParser
 
 

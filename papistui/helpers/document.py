@@ -5,7 +5,6 @@ This is used to inject additional methods into papis Document class
 from papis.document import Document
 from papistui.helpers.config import get_config
 
-
 config = get_config()
 
 

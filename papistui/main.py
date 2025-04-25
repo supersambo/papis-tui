@@ -1,16 +1,19 @@
 #!/usr/bin/python
+import re
+import sys
+
 import click
+
 import papis.pick
 from papis.document import Document
 from papistui.helpers.config import (
     check_config,
-    write_default_config,
     config_file_name,
     get_config,
+    write_default_config,
 )
+
 from .components.selector import Screen
-import re
-import sys
 
 
 @click.command(help="A curses based TUI for papis")

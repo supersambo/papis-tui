@@ -1,6 +1,7 @@
-from nvr.nvr import Nvr
-import psutil
 import subprocess
+
+import psutil
+from nvr.nvr import Nvr
 
 
 class Vim:
