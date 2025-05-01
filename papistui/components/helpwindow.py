@@ -1,9 +1,10 @@
 import argparse
 import re
+
 from papistui.helpers.styleparser import StyleParser
 
 
-class HelpWindow(object):
+class HelpWindow:
     def __init__(self, stdscr, keymappings, commandparser, docpad):
         """Constructor method
 
@@ -71,16 +72,16 @@ class HelpWindow(object):
         lines.append(("", "left", True))
         lines.append(("<underline>Keymappings</underline>", "center", True))
         lines.append(("", "left", True))
-        for idx, (key, value) in enumerate(self.keymappings.items()):
-            lines.append(("{} :: {}".format(key.rjust(m), value), "left", False))
+        for key, value in self.keymappings.items():
+            lines.append((f"{key.rjust(m)} :: {value}", "left", False))
 
         lines.append(("", "left", True))
         lines.append(("<underline>Available commands</underline>", "center", True))
         lines.append(("", "left", True))
         for subparser in self.subparsers:
-            cmd = re.sub("^.*\s", "", subparser.prog)
+            cmd = re.sub(r"^.*\s", "", subparser.prog)
             lines.append(
-                ("{} :: {}".format(cmd.rjust(m), subparser.description), "left", False)
+                (f"{cmd.rjust(m)} :: {subparser.description}", "left", False)
             )
 
         lines.append(("", "left", True))

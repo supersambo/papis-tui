@@ -1,16 +1,19 @@
 #!/usr/bin/python
+import re
+import sys
+
 import click
+
 import papis.pick
 from papis.document import Document
 from papistui.helpers.config import (
     check_config,
-    write_default_config,
     config_file_name,
     get_config,
+    write_default_config,
 )
+
 from .components.selector import Screen
-import re
-import sys
 
 
 @click.command(help="A curses based TUI for papis")
@@ -33,7 +36,7 @@ def run(library, config, debug):
     """A curses based TUI for papis"""
 
     if not check_config(config):
-        print("No configuration file found in {}".format(config_file_name(config)))
+        print(f"No configuration file found in {config_file_name(config)}")
         answer = input(
             "Dow you want to create a minimal default configuration file? (Y/n)"
         )
@@ -80,7 +83,7 @@ def pick(options):
             else:
                 return selection
         else:
-            display_options = [re.sub(".*/", "", i) for i in options]
+            display_options = [re.sub(r".*/", "", i) for i in options]
             screen = Screen(display_options)
             selection = screen.run()
             return options[selection]

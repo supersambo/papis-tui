@@ -1,11 +1,6 @@
 import curses
 from html.parser import HTMLParser
 from itertools import product
-import papis.api as api
-try:
-    from papistui.features.bibtexprint import format_reference
-except:
-    pass
 
 
 class StyleParser(HTMLParser):
@@ -15,12 +10,12 @@ class StyleParser(HTMLParser):
         self.fmt = []
         self.output = []
         self.styledict = {}
-        self.createStyleDict()
+        self.create_style_dict()
 
-    def createStyleDict(self):
+    def create_style_dict(self):
         """ Create a dictionary of styles and their numeric representation """
 
-        _colornames = {
+        colornames = {
             "bg": -1,
             "black": 0,
             "red": 1,
@@ -31,20 +26,20 @@ class StyleParser(HTMLParser):
             "cyan": 6,
             "white": 7,
         }
-        _colorcombs = [
-            cmb for cmb in product(_colornames.keys(), repeat=2) if cmb[0] != cmb[1]
+        colorcombs = [
+            cmb for cmb in product(colornames.keys(), repeat=2) if cmb[0] != cmb[1]
         ]
 
-        for i, cmb in enumerate(_colorcombs):
+        for i, cmb in enumerate(colorcombs):
             if __name__ != "__main__":
-                curses.init_pair(i, _colornames[cmb[0]], _colornames[cmb[1]])
+                curses.init_pair(i, colornames[cmb[0]], colornames[cmb[1]])
                 self.styledict.update(
-                    {"{}_{}".format(cmb[0], cmb[1]): curses.color_pair(i)}
+                    {f"{cmb[0]}_{cmb[1]}": curses.color_pair(i)}
                 )
             else:
-                self.styledict.update({"{}_{}".format(cmb[0], cmb[1]): 0})
+                self.styledict.update({f"{cmb[0]}_{cmb[1]}": 0})
 
-        _styledict = {
+        styledict = {
             "altcharset": curses.A_ALTCHARSET,
             "blink": curses.A_BLINK,
             "bold": curses.A_BOLD,
@@ -81,9 +76,9 @@ class StyleParser(HTMLParser):
             "ansiwhite": self.styledict["white_bg"],
         }
 
-        self.styledict = {**self.styledict, **_styledict}
+        self.styledict = {**self.styledict, **styledict}
 
-    def computeStyle(self, styles):
+    def compute_style(self, styles):
         """ Return the numeric representation of a (combination of) styles
 
         :param styles: str of styles separated by pipe e.g. bold|red
@@ -115,7 +110,8 @@ class StyleParser(HTMLParser):
 
         :param string: str to be parsed
         :param doc: document for which information should be parsed, defaults to None
-        :param additional: additional objects to be made available for evaluation, defaults to None
+        :param additional: additional objects to be made available for evaluation,
+            defaults to None
         :param evaluate: bool whether to evaluate or only parse, defaults to True
         :return list of dict containing parsing results to be printed
         """
@@ -130,7 +126,7 @@ class StyleParser(HTMLParser):
             result.append(
                 {
                     "content": i["content"],
-                    "style": self.computeStyle(i["format"]),
+                    "style": self.compute_style(i["format"]),
                     "posx": posx,
                     "len": len(i["content"]),
                 }
@@ -223,9 +219,11 @@ class StyleParser(HTMLParser):
         :param ymax: int maximum space available in y direction, defaults to 1
         :param yscroll: int scroll position whene wraplines True, defaults to None
         :param doc: document used for string evaluation, defaults to None
-        :param additional: additional variable to be used for string evaluation, defaults to None
+        :param additional: additional variable to be used for string evaluation,
+            defaults to None
         :param xoffset: int for shifting start to the right, defaults to 0
-        :param align: str text alignment either "left", "right" or "center", defaults to "left"
+        :param align: str text alignment either "left", "right" or "center",
+            defaults to "left"
         :param evaluate: bool whether to evaluate strings within {}, defaults to True
         :param parse: bool whether to parse string, defaults to True
         :param wraplines: bool whether to break lines on xmax, defaults to False
@@ -244,7 +242,7 @@ class StyleParser(HTMLParser):
             else:
                 printjobs = self.nonparse(string)
             if wraplines and len(printjobs) > 0:
-                result = self.wraplines(printjobs, xmax=xmax-2)
+                result = self.wraplines(printjobs, xmax=xmax - 2)
                 for line in result:
                     lines.append(line)
             else:
@@ -308,14 +306,15 @@ class StyleParser(HTMLParser):
         :param fill: Whether to fill all empty space with white spaces
         this is used for linewise highlighting, defaults to False
         :param doc: document used for string evaluation, defaults to None
-        :param additional: additional variable to be used for string evaluation, defaults to None
+        :param additional: additional variable to be used for string evaluation,
+            defaults to None
         """
         string = self.evaluate(string, doc=doc, info=additional)
         if fill:
             filler = xmax - len(string)
             string = string + filler * " "
 
-        style = self.computeStyle(style)
+        style = self.compute_style(style)
         screen.addstr(posy, xoffset, string[:xmax], style)
 
     def parse_braces(self, string):
@@ -367,10 +366,8 @@ class StyleParser(HTMLParser):
             if string["eval"]:
                 try:
                     result += eval(string["string"])
-                except:
+                except Exception:
                     result += "evalerr"
             else:
                 result += string["string"]
         return result
-
-

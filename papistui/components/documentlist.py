@@ -1,12 +1,13 @@
-from papis.docmatcher import DocMatcher
-from papis.database.cache import match_document
-from papistui.helpers.styleparser import StyleParser
-from papistui.features.sorting import sort_multiple_keys
 import curses
 import re
 
+from papis.database.cache import match_document
+from papis.docmatcher import DocMatcher
+from papistui.features.sorting import sort_multiple_keys
+from papistui.helpers.styleparser import StyleParser
 
-class DocumentList(object):
+
+class DocumentList:
     def __init__(self, items, initsize, stdscr, config):
         """ Constructor method
 
@@ -38,7 +39,7 @@ class DocumentList(object):
         self._top_idx = 0  # index of the first document in items idx_top_idx_itm
         self._selected_win_idx = 0  # position of selected option on window idx_sel_win
         self.selected_idx = 0  # index of selected_win_idx item in item list idx_sel_itm
-        self.bottom = len(self.view)  # lenght of items in view
+        self.bottom = len(self.view)  # length of items in view
         self.rownr = self.getrownr()  # number of options that fit on window
 
         self.init_pad()
@@ -138,7 +139,8 @@ class DocumentList(object):
         selected_win_idx_page = (self.top_idx + self.selected_win_idx) // self.rownr
         next_page = selected_win_idx_page + direction
         # The last page may have fewer items than max lines,
-        # so we should adjust the selected_win_idx cursor position as maximum item count on last page
+        # so we should adjust the selected_win_idx cursor position as maximum
+        # item count on last page
         if next_page == pagenr:
             self.selected_win_idx = min(
                 self.selected_win_idx, self.bottom % self.rownr - 1
@@ -146,7 +148,8 @@ class DocumentList(object):
 
         # Page up
         # if selected_win_idx page is not a first page, page up is possible
-        # top_idx position can not be negative, so if top_idx position is going to be negative, we should set it as 0
+        # top_idx position can not be negative, so if top_idx position is
+        # going to be negative, we should set it as 0
         if (direction == -1) and (selected_win_idx_page > 0):
             self.top_idx = max(0, self.top_idx - self.rownr)
             return
@@ -163,14 +166,16 @@ class DocumentList(object):
         """
 
         # Down direction scroll overflow
-        # next cursor position touchs the max lines, but absolute position of max lines could not touch the bottom
+        # next cursor position touches the max lines, but absolute position
+        # of max lines could not touch the bottom
         if (
             self.selected_win_idx + 1 == self.rownr
             and self.top_idx + self.rownr < self.bottom
         ):
             self.top_idx += 1
             return
-        # next cursor position is above max lines, and absolute position of next cursor could not touch the bottom
+        # next cursor position is above max lines, and absolute position
+        # of next cursor could not touch the bottom
         if (
             self.selected_win_idx + 1 < self.rownr
             and self.top_idx + self.selected_win_idx + 1 < self.bottom
@@ -304,7 +309,7 @@ class DocumentList(object):
         elif self.style == "multiline":
             frametop_idx = "╭" + "─" * int(self.size["sizex"] - 2) + "╮"
             framebottom = "╰" + "─" * int(self.size["sizex"] - 2) + "╯"
-            itemstart = lambda idx: idx * (self.styleheight + 1) + 1
+            itemstart = lambda idx: idx * (self.styleheight + 1) + 1  # noqa: E731
             # draw items
             for idx, item in enumerate(
                 self.view[self.top_idx : self.top_idx + self.rownr]
@@ -470,11 +475,12 @@ class DocumentList(object):
         """
         try:
             aliases = self.config["commandline"]["search"]["keyword_aliases"]
-            for alias in aliases:
-                regex = r"\b" + re.escape(alias) + r"\b"
-                query = re.sub(regex, aliases[alias], query)
-        except:
-            pass
+        except KeyError:
+            aliases = []
+
+        for alias in aliases:
+            regex = r"\b" + re.escape(alias) + r"\b"
+            query = re.sub(regex, aliases[alias], query)
 
         DocMatcher.set_matcher(match_document)
         DocMatcher.parse(query)

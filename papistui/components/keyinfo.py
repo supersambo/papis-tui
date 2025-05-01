@@ -1,8 +1,9 @@
 import curses
+
 from papistui.helpers.styleparser import StyleParser
 
 
-class KeyInfo(object):
+class KeyInfo:
     def __init__(self, stdscr):
         """Constructor method
 
@@ -22,7 +23,7 @@ class KeyInfo(object):
         """
 
         self.sizey = len(options) + 1
-        self.sizex = max([(len(i["km"]) + len(i["cmd_desc"])) for i in options]) + 7
+        self.sizex = max((len(i["km"]) + len(i["cmd_desc"])) for i in options) + 7
         rows = []
         for option in options:
             length = len(option["km"]) + len(option["cmd_desc"]) + 4

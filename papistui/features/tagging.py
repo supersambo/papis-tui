@@ -1,7 +1,3 @@
-import papis.api as api
-import re
-
-
 def tag_document(doc, tags, tagfield):
     """Add or remove tag from document
 
@@ -12,7 +8,7 @@ def tag_document(doc, tags, tagfield):
 
     if not doc[tagfield]:
         doc[tagfield] = []
-    elif type(doc[tagfield]) == str:
+    elif type(doc[tagfield]) is str:
         doc[tagfield] = [doc[tagfield]]
 
     for tag in tags:
@@ -29,7 +25,8 @@ def process_tags(tags):
     """Preprocess list of tags
 
     :param tags: list of tags
-    :return list of tuples including tags and boolean to whether add (True) or remove (False)
+    :return list of tuples including tags and boolean to whether add (True) or
+        remove (False)
     """
     result = []
     for tag in tags:

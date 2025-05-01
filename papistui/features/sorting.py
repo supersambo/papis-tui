@@ -1,6 +1,4 @@
-import papis.api as api
 from papis.document import sort
-import re
 
 
 def sort_group(docs, key):
@@ -29,7 +27,7 @@ def process_sortkeys(sortkeys):
     :return list of tuples containing key and boolean (key, decreasing)
     """
 
-    if type(sortkeys) == str:
+    if type(sortkeys) is str:
         sortkeys = sortkeys.split()
     result = []
     for key in sortkeys:
@@ -54,7 +52,6 @@ def sort_multiple_keys(docs, sortkeys):
 
     keys = process_sortkeys(sortkeys)
     docs = sort(docs, keys[0][0], keys[0][1])
-    result = []
     idx = 0
     while idx + 1 < len(keys):
         nextsort = []
@@ -65,4 +62,3 @@ def sort_multiple_keys(docs, sortkeys):
         docs = nextsort
         idx += 1
     return docs
-

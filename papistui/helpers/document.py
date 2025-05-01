@@ -2,16 +2,15 @@
 This is used to inject additional methods into papis Document class
 """
 
-from papis import api
 from papis.document import Document
 from papistui.helpers.config import get_config
-
 
 config = get_config()
 
 
 def alias(self, field):
-    """ Returns alternative representation for entries in field as defined in configuration
+    """ Returns alternative representation for entries in field as defined in
+    the configuration
 
     :param field: field for which aliases are to be looked up in config
     :return str alias for original value
@@ -19,13 +18,14 @@ def alias(self, field):
 
     try:
         result = config["documentlist"]["aliases"][field][self.get(field)]
-    except:
+    except KeyError:
         try:
             result = config["documentlist"]["aliases"][field]["_default_"]
-        except:
+        except KeyError:
             result = ""
 
     return result
+
 
 Document.alias = alias
 
@@ -41,9 +41,9 @@ def foreach(self, field, style, sep=" ", split=", "):
     """
 
     try:
-        if type(self[field]) == list:
+        if type(self[field]) is list:
             elements = self[field]
-        elif type(self[field]) == str:
+        elif type(self[field]) is str:
             elements = self[field].split(split)
         else:
             elements = str(self[field])
@@ -54,8 +54,9 @@ def foreach(self, field, style, sep=" ", split=", "):
                 results.append(style.replace("{}", element))
 
         return sep.join(results)
-    except:
+    except KeyError:
         return ""
+
 
 Document.foreach = foreach
 
@@ -72,5 +73,6 @@ def forfile(self, string="*", sep=""):
         return sep.join([string for i in files])
     else:
         return ""
+
 
 Document.forfile = forfile
