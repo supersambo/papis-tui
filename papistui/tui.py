@@ -3,6 +3,7 @@ import io
 import os
 import shlex
 import curses
+import subprocess
 import tempfile
 from curses.textpad import Textbox
 
