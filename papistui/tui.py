@@ -1,38 +1,38 @@
-import curses
+import re
 import io
 import os
-import re
 import shlex
+import curses
 import subprocess
-import sys
 import tempfile
 from curses.textpad import Textbox
 
 import papis.api as api
-from papis.api import open_dir, open_file
-from papis.commands.browse import run as browse_document
+from papis.api import open_file
+from papis.api import open_dir
 from papis.commands.edit import run as edit_document
 from papis.commands.rm import run as rm_document
+from papis.commands.browse import run as browse_document
 
-from papistui.components.commandinfo import CommandInfo
-from papistui.components.documentlist import DocumentList
-from papistui.components.helpwindow import HelpWindow
-from papistui.components.infowindow import InfoWindow
-from papistui.components.keyinfo import KeyInfo
-from papistui.components.messagebar import MessageBar
-from papistui.components.statusbar import StatusBar
-from papistui.features.tagging import process_tags, tag_document
-from papistui.features.vim import Vim
-from papistui.helpers.config import get_config
 from papistui.helpers.customargparse import ArgumentParser, HelpCall
 from papistui.helpers.document import Document
-from papistui.helpers.keymappings import KeyMappings
 from papistui.helpers.styleparser import StyleParser
+from papistui.helpers.keymappings import KeyMappings
+from papistui.helpers.config import get_config
+from papistui.components.documentlist import DocumentList
+from papistui.components.statusbar import StatusBar
+from papistui.components.messagebar import MessageBar
+from papistui.components.commandinfo import CommandInfo
+from papistui.components.infowindow import InfoWindow
+from papistui.components.keyinfo import KeyInfo
+from papistui.components.helpwindow import HelpWindow
+from papistui.features.vim import Vim
+from papistui.features.tagging import process_tags, tag_document
+
 
 try:
     # this was introduced recently
     from papis.logging import setup as setup_logging
-
     # This is used to redirect papis logger to a temporary file
     # in order to avoid it messing up curses when printing to stdout
     tmpfile = tempfile.NamedTemporaryFile()
@@ -70,17 +70,6 @@ class Tui(object):
         self.keymappings = self.config["keymappings"]
         self.keychain = []
 
-        # Documentlist
-        self.library = self.config["base"]["library"]
-        if options:
-            docs = options
-        else:
-            docs = self.getalldocs()
-        if len(docs) == 0:
-            print("No Documents retrieved!")
-            sys.exit(1)
-        self.doclist = DocumentList(docs, self.doclist_size, self.stdscr, self.config)
-
         # curses
         self.stdscr = curses.initscr()
         curses.noecho()
@@ -102,6 +91,13 @@ class Tui(object):
         # calculate component sizes
         self.calcsize()
 
+        # Documentlist
+        self.library = self.config["base"]["library"]
+        if options:
+            docs = options
+        else:
+            docs = self.getalldocs()
+        self.doclist = DocumentList(docs, self.doclist_size, self.stdscr, self.config)
 
         # tags
         self.tagfield = self.config["documentlist"]["tagfield"]
