@@ -10,6 +10,7 @@ from papis.api import open_dir, open_file
 from papis.commands.browse import run as browse_document
 from papis.commands.edit import run as edit_document
 from papis.commands.rm import run as rm_document
+
 from papistui.components.commandinfo import CommandInfo
 from papistui.components.documentlist import DocumentList
 from papistui.components.helpwindow import HelpWindow
@@ -21,12 +22,14 @@ from papistui.features.tagging import process_tags, tag_document
 from papistui.features.vim import Vim
 from papistui.helpers.config import get_config
 from papistui.helpers.customargparse import ArgumentParser, HelpCall
+from papistui.helpers.document import Document
 from papistui.helpers.keymappings import KeyMappings
 from papistui.helpers.styleparser import StyleParser
 
 try:
     # this was introduced recently
     from papis.logging import setup as setup_logging
+
     # This is used to redirect papis logger to a temporary file
     # in order to avoid it messing up curses when printing to stdout
     tmpfile = tempfile.NamedTemporaryFile()
