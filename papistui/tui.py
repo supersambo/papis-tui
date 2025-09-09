@@ -1,5 +1,6 @@
 import curses
 import io
+import os
 import re
 import shlex
 import tempfile
@@ -539,7 +540,7 @@ class Tui:
                 elif len(files) > 1:
                     options = ["Choose file to open:"]
                     [
-                        options.append(f"{idx}: {self.path.basename(i)}")
+                        options.append(f"{idx}: {os.path.basename(i)}")
                         for idx, i in enumerate(files)
                     ]
                     return {"exit_status": 1, "options": options, "default": "0"}
