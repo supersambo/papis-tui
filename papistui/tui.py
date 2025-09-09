@@ -12,6 +12,7 @@ from papis.commands.edit import run as edit_document
 from papis.commands.rm import run as rm_document
 
 from papistui.components.commandinfo import CommandInfo
+from papistui.components.commandprompt import CommandPrompt
 from papistui.components.documentlist import DocumentList
 from papistui.components.helpwindow import HelpWindow
 from papistui.components.infowindow import InfoWindow
@@ -80,6 +81,9 @@ class Tui:
         # CommandInfo
         self.commandinfo = CommandInfo(self.stdscr)
         self.command = None
+
+        # CommandPrompt
+        self.commandprompt = CommandPrompt(self.stdscr)
 
         # InfoWindow
         self.infowindow = InfoWindow(self.stdscr, self.config)
@@ -453,7 +457,11 @@ class Tui:
         """
 
         self.mode = "command"
-        self.commandedit()
+        text = self.commandprompt.edit(prompt=self.prefix[self.mode])
+        if text == "":
+            self.mode = "normal"
+        else:
+            self.handle_command(text)
         return {"exit_status": 0}
 
     def select_mode(self, default="", *args):
@@ -464,7 +472,16 @@ class Tui:
         """
 
         self.mode = "select"
-        self.commandedit(fill=default)
+        option = self.commandprompt.edit(prompt=self.prefix[self.mode])
+        if option == "":
+            self.commandinfo.destroy()
+            self.resize()
+            self.mode = "normal"
+        else:
+            command = f"{self.command} -o {option}"
+            self.command = None
+            self.handle_command(command)
+
         return {"exit_status": 0}
 
     def search_mode(self, *args):
@@ -474,7 +491,12 @@ class Tui:
         """
 
         self.mode = "search"
-        self.commandedit()
+        text = self.commandprompt.edit(prompt=self.prefix[self.mode])
+        if text == "":
+            self.mode = "normal"
+        else:
+            command = f"search {text}"
+            self.handle_command(command)
         return {"exit_status": 0}
 
     def raise_helpwindow(self, *args):
