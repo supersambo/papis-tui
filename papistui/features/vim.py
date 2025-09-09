@@ -1,9 +1,10 @@
-from nvr.nvr import Nvr
-import psutil
 import subprocess
 
+import psutil
+from nvr.nvr import Nvr
 
-class Vim(object):
+
+class Vim:
     def __init__(self, flavour="vim"):
         """ Constructor method
 
@@ -24,7 +25,7 @@ class Vim(object):
             try:
                 servers = subprocess.check_output(["vim", "--serverlist"])
                 servers = servers.decode("utf-8").splitlines()
-            except:
+            except subprocess.SubprocessError:
                 pass
 
         elif self.flavour == "nvim":
@@ -85,10 +86,11 @@ class Vim(object):
         """
 
         if self.flavour == "vim":
-            sendline = 'vim --servername {} --remote-send "<Esc>a{}"'.format(
-                self.servername, string
+            sendline = (
+                f'vim --servername {self.servername} '
+                f'--remote-send "<Esc>a{string}"'
             )
-            result = subprocess.call(sendline, shell=True)
+            _ = subprocess.call(sendline, shell=True)
         if self.flavour == "nvim":
-            sendline = "<Esc>a{}".format(string)
+            sendline = f"<Esc>a{string}"
             self.nvr.server.input(sendline)

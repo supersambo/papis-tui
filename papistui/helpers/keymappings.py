@@ -1,6 +1,5 @@
 import re
 from curses.ascii import alt, ctrl
-import curses
 
 
 class KeyMappings:
@@ -8,12 +7,13 @@ class KeyMappings:
         """ Constructor method
 
         :param config: dict configuration options
-        :param filtered: list of mappings to be used (for picker selector), defaults to None
+        :param filtered: list of mappings to be used (for picker selector),
+            defaults to None
         """
 
         mappings = {}
         for i in config["keymappings"]:
-            if type(config["keymappings"][i]) == list:
+            if type(config["keymappings"][i]) is list:
                 mappings.update({i: config["keymappings"][i]})
             else:
                 mappings.update(
@@ -101,7 +101,7 @@ class KeyMappings:
         result = []
         while idx < len(string):
             if string[idx] == "<":
-                keymod = re.sub(">.*$", "", string[idx + 1 :])
+                keymod = re.sub(r">.*$", "", string[idx + 1 :])
                 result.append(keymod)
                 idx += len(keymod) + 2
             else:
@@ -117,24 +117,19 @@ class KeyMappings:
                     modified key like <ctrl-a> or <alt-a>
         :return int keycode
         """
+        import curses
 
         lkey = key.lower()
         result = None
         if len(key) > 1:
-            if re.search("-", key):
+            if "-" in key:
                 if lkey.startswith("ctrl-") or lkey.startswith("c-"):
                     result = ctrl(ord(key[len(key) - 1]))
                 elif lkey.startswith("alt-") or lkey.startswith("a-"):
                     result = alt(ord(key[len(key) - 1]))
             elif lkey.startswith("key_"):
-                try:
-                    result = eval("curses." + key.upper())
-                except:
-                    pass
+                result = getattr(curses, key.upper(), None)
         else:
             result = ord(key)
 
         return result
-
-
-

@@ -13,7 +13,6 @@ from papis.api import open_dir, open_file
 from papis.commands.browse import run as browse_document
 from papis.commands.edit import run as edit_document
 from papis.commands.rm import run as rm_document
-
 from papistui.components.commandinfo import CommandInfo
 from papistui.components.documentlist import DocumentList
 from papistui.components.helpwindow import HelpWindow
@@ -25,7 +24,7 @@ from papistui.features.tagging import process_tags, tag_document
 from papistui.features.vim import Vim
 from papistui.helpers.config import get_config
 from papistui.helpers.customargparse import ArgumentParser, HelpCall
-from papistui.helpers.document import Document
+from papistui.helpers.document import Document  # noqa: F401
 from papistui.helpers.keymappings import KeyMappings
 from papistui.helpers.styleparser import StyleParser
 
@@ -36,20 +35,19 @@ try:
     # This is used to redirect papis logger to a temporary file
     # in order to avoid it messing up curses when printing to stdout
     tmpfile = tempfile.NamedTemporaryFile()
-    setup_logging(50, logfile = tmpfile.name)
-
-except:
+    setup_logging(50, logfile=tmpfile.name)
+except ImportError:
     pass
 
 
-
-class Tui(object):
+class Tui:
     def __init__(self, options=None, config=None, debugging=False):
         """ Constructor method
 
         :param options: list of documents, defaults to None
         :param config: dict configuration options, defaults to None
-        :param debugging: bool whether to allow entering degbugger when hitting d, defaults to False
+        :param debugging: bool whether to allow entering degbugger when hitting
+            ``d``, defaults to *False*
         """
 
         self._quit = False
@@ -98,7 +96,7 @@ class Tui(object):
         else:
             docs = self.getalldocs()
 
-        if len(docs)==0:
+        if len(docs) == 0:
             curses.endwin()
             print("No Documents retrieved!")
             sys.exit()
@@ -126,7 +124,7 @@ class Tui(object):
             self.commandwin_size["posx"],
         )
         # self.commandbox = curses.textpad.Textbox(self.commandwin)
-        self.commandbox = Textbox(self.commandwin, insert_mode = True)
+        self.commandbox = Textbox(self.commandwin, insert_mode=True)
         self.setup_parser()
 
         # HelpWindow
@@ -196,7 +194,9 @@ class Tui(object):
         curses.use_default_colors()
 
     def calcsize(self):
-        """ Compute sizes for each component based on screen size and active components """
+        """Compute sizes for each component based on screen size and active
+        components.
+        """
 
         rows, cols = self.stdscr.getmaxyx()
         self.rows = rows
@@ -343,7 +343,7 @@ class Tui(object):
         self.commandwin.erase()
         curses.curs_set(2)
         self.commandwin.addstr(0, 0, self.prefix[self.mode] + fill)
-        text = self.commandbox.edit(self._awaitenter)
+        self.commandbox.edit(self._awaitenter)
         self.commandwin.refresh()
 
     def _awaitenter(self, x):
@@ -356,11 +356,12 @@ class Tui(object):
             if self.mode == "command":
                 self.handle_command(self.commandbox.gather()[1:])
             elif self.mode == "search":
-                command = "search {}".format(self.commandbox.gather().strip()[1:])
+                text = self.commandbox.gather().strip()[1:]
+                command = f"search {text}"
                 self.handle_command(command)
             elif self.mode == "select":
                 option = self.commandbox.gather()[1:]
-                command = "{} -o {}".format(self.command, option)
+                command = f"{self.command} -o {option}"
                 self.command = None
                 self.handle_command(command)
 
@@ -385,10 +386,10 @@ class Tui(object):
             self.input_stream()
         except KeyboardInterrupt:
             pass
-        finally:
-            curses.endwin()
-            if self.picker and self.picked:
-                return self.doclist.selected_doc
+
+        curses.endwin()
+        if self.picker and self.picked:
+            return self.doclist.selected_doc
 
     def input_stream(self):
         """ Handle all input including keys and resize """
@@ -425,7 +426,7 @@ class Tui(object):
         :param ch: keycode
         """
 
-        key = [ch] if len(self.keychain) == 0 else self.keychain + [ch]
+        key = [ch] if len(self.keychain) == 0 else [*self.keychain, ch]
         match = self.km.match(key)
         if match:
             self.clean()
@@ -546,7 +547,7 @@ class Tui(object):
                 elif len(files) > 1:
                     options = ["Choose file to open:"]
                     [
-                        options.append("{}: {}".format(idx, os.path.basename(i)))
+                        options.append(f"{idx}: {os.path.basename(i)}")
                         for idx, i in enumerate(files)
                     ]
                     return {"exit_status": 1, "options": options, "default": "0"}
@@ -605,12 +606,18 @@ class Tui(object):
                     rm_document(doc)
 
                 self.doclist.items = self.getalldocs()
-                return {"exit_status": 0, "message": ("{} document(s) deleted!".format(len_docs), "success")}
+                return {
+                    "exit_status": 0,
+                    "message": (f"{len_docs} document(s) deleted!", "success"),
+                }
             else:
-                return {"exit_status": 0, "message": ("Deletion cancelled", "error")}
+                return {
+                    "exit_status": 0,
+                    "message": ("Deletion cancelled", "error"),
+                }
         else:
             options = [
-                "Are you sure you want do delete {} document(s)?".format(len_docs),
+                f"Are you sure you want do delete {len_docs} document(s)?",
                 "0: No, cancel",
                 "1: Yes",
             ]
@@ -632,7 +639,7 @@ class Tui(object):
             return {
                 "exit_status": 0,
                 "message": (
-                    "Vim Server set to: {}".format(self.vim.servername),
+                    f"Vim Server set to: {self.vim.servername}",
                     "success",
                 ),
             }
@@ -642,14 +649,14 @@ class Tui(object):
                 return {
                     "exit_status": 0,
                     "message": (
-                        "Vim Server set to: {}".format(self.vim.servername),
+                        f"Vim Server set to: {self.vim.servername}",
                         "success",
                     ),
                 }
             if len(servers) > 1:
                 options = ["Choose server to connect to:"]
                 [
-                    options.append("{}: {}".format(idx, i))
+                    options.append(f"{idx}: {i}")
                     for idx, i in enumerate(servers)
                 ]
                 return {"exit_status": 1, "options": options}
@@ -674,7 +681,7 @@ class Tui(object):
         args = vars(args)
         if args["string"] is not None:
             string = self.styleparser.evaluate(
-                " ".join(args['string']), doc=self.doclist.selected_doc
+                " ".join(args["string"]), doc=self.doclist.selected_doc
             )
             self.vim.send(string)
 
@@ -781,7 +788,7 @@ class Tui(object):
                 self.resize()
                 self.doclist.display()
                 info = str(error).splitlines()[0]
-                info = re.sub("\(.*$", "", info)
+                info = re.sub(r"\(.*$", "", info)
                 self.message = (info, "error")
 
     def raise_commandinfo(self, info):
@@ -802,7 +809,7 @@ class Tui(object):
             self.resize()
             self.commandinfo.display(info)
 
-    def tag(self, args = None):
+    def tag(self, args=None):
         """ Tag marked or selected documents
 
         :returns dict with exit status
@@ -823,15 +830,20 @@ class Tui(object):
 
         :returns dict with exit status
         """
-        string = self.styleparser.evaluate(command, doc=self.doclist.selected_doc, docs=self.doclist.marked)
+
+        string = self.styleparser.evaluate(
+            command,
+            doc=self.doclist.selected_doc,
+            docs=self.doclist.marked)
         cmd = shlex.split(string)
 
         curses.endwin()
+
         try:
-            run = subprocess.Popen(cmd, shell = False)
+            run = subprocess.Popen(cmd, shell=False)
             run.wait()
             self.stdscr.refresh()
-        except:
+        except subprocess.SubprocessError:
             self.stdscr.refresh()
             self.resize()
             self.doclist.display()
@@ -892,7 +904,9 @@ class Tui(object):
 
         mark_down = subparsers.add_parser(
             "mark_down",
-            description="Toggle mark on selected document in document list and scroll down",
+            description=(
+                "Toggle mark on selected document in document list and scroll down"
+            ),
         )
         mark_down.set_defaults(func=self.doclist.mark_down)
 
@@ -942,14 +956,21 @@ class Tui(object):
         )
         sort.set_defaults(func=self.sort)
 
-        tag = subparsers.add_parser("tag", description="Tag marked (if any) or selected document(s)")
+        tag = subparsers.add_parser(
+            "tag",
+            description="Tag marked (if any) or selected document(s)")
         tag.add_argument(
             "tags",
-            help="Tags to be added or removed (by adding trailing \'-\') documents (e.g. interesting- boring+)",
+            help=(
+                "Tags to be added or removed (by adding trailing '-') "
+                "documents (e.g. interesting- boring+)"),
             nargs="+",
             type=str,
         )
-        tag.add_argument("-s", "--selected", help="Force to tag only selected document even if some are marked.", action="store_true")
+        tag.add_argument(
+            "-s", "--selected",
+            help="Force to tag only selected document even if some are marked.",
+            action="store_true")
         tag.set_defaults(func=self.tag)
 
         papis_cmd = subparsers.add_parser("papis", description="Run a papis command")
@@ -1010,7 +1031,10 @@ class Tui(object):
         browse.set_defaults(func=self.browse)
 
         rm = subparsers.add_parser("rm", description="Remove document")
-        rm.add_argument("-s", "--selected", help="Force to delete only selected document even if some are marked.", action="store_true")
+        rm.add_argument(
+            "-s", "--selected",
+            help="Force to delete only selected document even if some are marked.",
+            action="store_true")
         rm.add_argument(
             "-o", "--option", help="Confirm deletion (1) or cancel (0)", type=int
         )

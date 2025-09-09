@@ -49,7 +49,7 @@ If there is no configuration file in place, papis-tui will offer to create a min
 `papis-tui` is configured via a YAML configuration file in your papis config folder (something like `~/.config/papis/papistui.yaml`). Configuration options are not yet documented extensively. However when starting papis-tui without a config file in place, it will offer to create a default config file, which is a good starting point to tinker around. Alternatively, you can also check out config file used for the screencast above [here](https://gist.github.com/supersambo/e90c034393fee09842c7d108b6ff00cc).
 
 ## Configure display styles
-`papis-tui` offers two different styles for displaying information about the documents in your library. 'multiline' mimicks papis native tui and displays information about documents on several lines, whereas 'table' shows information in columns on one line per document. I personally prefer 'multiline', which is why 'table'-style is somewhat neglected. The default display style can be configured in the `documentlist` section of your config file like this:
+`papis-tui` offers two different styles for displaying information about the documents in your library. 'multiline' mimics papis native tui and displays information about documents on several lines, whereas 'table' shows information in columns on one line per document. I personally prefer 'multiline', which is why 'table'-style is somewhat neglected. The default display style can be configured in the `documentlist` section of your config file like this:
 
 ``` yaml
 documentlist:
@@ -133,7 +133,7 @@ keymappings:
   q: quit
 ```
 ### Modifying Keyhints
-Chained keymappings may be hard to remember. Papis-tui therefore displays hints in the bottom right corner, whenever the key you entered matches the start of (a) keychain(s) mapped to specific commands. However, if a command includes various and/or complex arguments, this becomes dificult to decipher (also, papis-tui may struggle to render it correctly if your arguments include special characters). You may therefore provide a short description of what the command is supposed to do, which will be displayed instead.
+Chained keymappings may be hard to remember. Papis-tui therefore displays hints in the bottom right corner, whenever the key you entered matches the start of (a) keychain(s) mapped to specific commands. However, if a command includes various and/or complex arguments, this becomes difficult to decipher (also, papis-tui may struggle to render it correctly if your arguments include special characters). You may therefore provide a short description of what the command is supposed to do, which will be displayed instead.
 
 For instance, the `open` command accepts the `-d` flag to open a documents folder instead of the files attached. The `-r` argument can be used to filter available options based on the name of the files attached to a document (see `:open --help`). In order to access different options rapidly without having to remember this, you could configure the following keymappings.
 
@@ -219,7 +219,7 @@ infowindow:
       content: "{format_reference(doc)}"
 ```
 
-The `:info_toggle` command can be used to toggle the window on or off and views be changed whith `:info_cycle`. You can scroll up the info_window up or down using `:info_scroll_up` and `:info_scroll_down`. 
+The `:info_toggle` command can be used to toggle the window on or off and views be changed with `:info_cycle`. You can scroll up the info_window up or down using `:info_scroll_up` and `:info_scroll_down`.
 
 ## Using papis-tui as the papis picker
 In order to use papis-tui as the picker for papis you must specify this in your papis configuration file (not `papistui.yaml`!) under settings, which is usually located in `~/.config/papis/config`:
@@ -268,14 +268,14 @@ keymappings:
 ```
 
 ## papis (calling papis from within papis-tui)
-Most `papis` commands and command arguments are not implemented natively in `papis-tui`. Instead, the focus is to provide a useful and costumizable user interface. However, `papis` can be called from within `papis-tui`, in the same manner one would do from the command line. This has the advantage that most features (including papis plugins) are available from within `papis-tui` and can be mapped to keys. In order to indicate which document a command should apply to, the following syntax can be used. 
+Most `papis` commands and command arguments are not implemented natively in `papis-tui`. Instead, the focus is to provide a useful and customizable user interface. However, `papis` can be called from within `papis-tui`, in the same manner one would do from the command line. This has the advantage that most features (including papis plugins) are available from within `papis-tui` and can be mapped to keys. In order to indicate which document a command should apply to, the following syntax can be used.
 
 ``` yaml
 keymappings:
   e: papis edit papis_id:{doc['papis_id']} -e gedit
 ```
 
-Here, `doc` resolves to the currently selected document and the `papis_id:...` syntax can be leveraged to call papis on one specific document. `docs` is also available as variable holding a list of all currently marked documents. Unfortunately, there doesn't seem to exist a syntax similar to `papis_id:...` that allows identify a set of documents yet. 
+Here, `doc` resolves to the currently selected document and the `papis_id:...` syntax can be leveraged to call papis on one specific document. `docs` is also available as variable holding a list of all currently marked documents. Unfortunately, there doesn't seem to exist a syntax similar to `papis_id:...` that allows identify a set of documents yet.
 
 # Roadmap
 Some ideas I'd like to implement some day (in no particular order of relevance):

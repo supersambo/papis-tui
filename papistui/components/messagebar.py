@@ -1,8 +1,9 @@
 import curses
+
 from papistui.helpers.styleparser import StyleParser
 
 
-class MessageBar(object):
+class MessageBar:
     def __init__(self, stdscr):
         """Constructor method
 
@@ -39,7 +40,7 @@ class MessageBar(object):
                         where message_type is either 'success', 'neutral', 'error'
         """
 
-        if type(message) == tuple:
+        if type(message) is tuple:
             message_type = message[1]
             message = message[0]
         else:
