@@ -13,7 +13,6 @@ from papis.api import open_dir, open_file
 from papis.commands.browse import run as browse_document
 from papis.commands.edit import run as edit_document
 from papis.commands.rm import run as rm_document
-
 from papistui.components.commandinfo import CommandInfo
 from papistui.components.documentlist import DocumentList
 from papistui.components.helpwindow import HelpWindow
@@ -97,7 +96,7 @@ class Tui:
         else:
             docs = self.getalldocs()
 
-        if len(docs)==0:
+        if len(docs) == 0:
             curses.endwin()
             print("No Documents retrieved!")
             sys.exit()
@@ -831,7 +830,6 @@ class Tui:
 
         :returns dict with exit status
         """
-        import subprocess
 
         string = self.styleparser.evaluate(
             command,
