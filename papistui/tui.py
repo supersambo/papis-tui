@@ -23,7 +23,7 @@ from papistui.features.tagging import process_tags, tag_document
 from papistui.features.vim import Vim
 from papistui.helpers.config import get_config
 from papistui.helpers.customargparse import ArgumentParser, HelpCall
-from papistui.helpers.document import Document
+from papistui.helpers.document import Document  # noqa: F401
 from papistui.helpers.keymappings import KeyMappings
 from papistui.helpers.styleparser import StyleParser
 
