@@ -282,16 +282,19 @@ Some ideas I'd like to implement some day (in no particular order of relevance):
 
 - [ ] Handle known bugs (see below)
 - [X] Implement a general papis command
-- [ ] ~~Implement papis `addto` command~~
-- [ ] ~~Implement papis `merge` command~~
-- [ ] ~~Implement papis `mv` command~~
-- [ ] ~~Implement papis `update` command~~
 - [ ] add options `--file` and `--notes` to `rm` command.
 - [ ] allow unicode input on command line
 - [ ] save per session command history (access via `<key_up>`) on command line
 - [ ] Implement simple text completion on command line
 - [ ] Improve code readability (including type-hints)
-- [ ] Implement a plugin system
+- [ ] ~~Implement a plugin system~~ \*
+- [ ] ~~Implement papis `addto` command~~ \*\* 
+- [ ] ~~Implement papis `merge` command~~ \*\*
+- [ ] ~~Implement papis `mv` command~~ \*\*
+- [ ] ~~Implement papis `update` command~~ \*\*
+
+\* *beware of feature creep*
+\*\* *let papis handle these*
 
 # Known bugs
 - papis-tui fails the first time after the papis cache was cleared (`papis --cc`). This makes papis-tui practically unusable if you have papis configured not to use the cache at all `use-cache = False`.

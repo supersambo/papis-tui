@@ -3,6 +3,8 @@ import io
 import os
 import re
 import shlex
+import subprocess
+import sys
 import tempfile
 from curses.textpad import Textbox
 
@@ -94,6 +96,12 @@ class Tui:
             docs = options
         else:
             docs = self.getalldocs()
+
+        if len(docs)==0:
+            curses.endwin()
+            print("No Documents retrieved!")
+            sys.exit()
+
         self.doclist = DocumentList(docs, self.doclist_size, self.stdscr, self.config)
 
         # tags
