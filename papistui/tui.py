@@ -1,16 +1,15 @@
 import curses
 import io
+import os
 import re
 import shlex
 import tempfile
-from curses.textpad import Textbox
 
 import papis.api as api
 from papis.api import open_dir, open_file
 from papis.commands.browse import run as browse_document
 from papis.commands.edit import run as edit_document
 from papis.commands.rm import run as rm_document
-
 from papistui.components.commandinfo import CommandInfo
 from papistui.components.commandprompt import CommandPrompt
 from papistui.components.documentlist import DocumentList
@@ -23,7 +22,7 @@ from papistui.features.tagging import process_tags, tag_document
 from papistui.features.vim import Vim
 from papistui.helpers.config import get_config
 from papistui.helpers.customargparse import ArgumentParser, HelpCall
-from papistui.helpers.document import Document
+from papistui.helpers.document import Document  # noqa: F401
 from papistui.helpers.keymappings import KeyMappings
 from papistui.helpers.styleparser import StyleParser
 
@@ -210,7 +209,12 @@ class Tui:
             "posy": rows - self.commandinfo.size["sizey"] - 2,
             "posx": 0,
         }
-        self.commandprompt_size = {"sizey": 1, "sizex": cols, "posy": rows - 1, "posx": 0}
+        self.commandprompt_size = {
+            "sizey": 1,
+            "sizex": cols,
+            "posy": rows - 1,
+            "posx": 0,
+        }
 
     def resize(self):
         """ Resize all components if screen has minimal size """
@@ -522,7 +526,7 @@ class Tui:
                 elif len(files) > 1:
                     options = ["Choose file to open:"]
                     [
-                        options.append(f"{idx}: {self.path.basename(i)}")
+                        options.append(f"{idx}: {os.path.basename(i)}")
                         for idx, i in enumerate(files)
                     ]
                     return {"exit_status": 1, "options": options, "default": "0"}
