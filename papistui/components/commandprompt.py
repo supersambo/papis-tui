@@ -31,13 +31,13 @@ class CommandPrompt:
     def _display_width(self, chars):
         return sum(max(wcwidth(c), 0) for c in chars)
 
-    def edit(self, prompt=":"):
+    def edit(self, prompt=":", prefill=""):
         self.input_chars = []
         self.prompt = prompt
         self.win.erase()
+        self.input_chars = list(prefill)
+        self.cursor_pos = len(self.input_chars)
         self.display()
-        self.input_chars = []
-        self.cursor_pos = 0
 
         while True:
             ch = self.win.get_wch()

@@ -111,16 +111,8 @@ class Tui:
         # StatusBar
         self.statusbar = StatusBar(self.statusbar_size, self.stdscr, self.config)
 
-        # CommandLine
+        # argparse
         self.argstream = io.StringIO("", "\n")
-        self.commandwin = curses.newwin(
-            self.commandwin_size["sizey"],
-            self.commandwin_size["sizex"],
-            self.commandwin_size["posy"],
-            self.commandwin_size["posx"],
-        )
-        # self.commandbox = curses.textpad.Textbox(self.commandwin)
-        self.commandbox = Textbox(self.commandwin, insert_mode=True)
         self.setup_parser()
 
         # HelpWindow
@@ -218,7 +210,7 @@ class Tui:
             "posy": rows - self.commandinfo.size["sizey"] - 2,
             "posx": 0,
         }
-        self.commandwin_size = {"sizey": 1, "sizex": cols, "posy": rows - 1, "posx": 0}
+        self.commandprompt_size = {"sizey": 1, "sizex": cols, "posy": rows - 1, "posx": 0}
 
     def resize(self):
         """ Resize all components if screen has minimal size """
@@ -228,10 +220,10 @@ class Tui:
         self.calcsize()
         if self.cols > 15 and self.rows > 10:
             self.lock = False
-            self.commandwin.mvwin(
-                self.commandwin_size["posy"], self.commandwin_size["posx"]
+            self.commandprompt.win.mvwin(
+                self.commandprompt_size["posy"], self.commandprompt_size["posx"]
             )
-            self.commandwin.refresh()
+            self.commandprompt.win.refresh()
             self.doclist.size = self.doclist_size
             self.statusbar.size = self.statusbar_size
             self.infowindow.size = self.infowindow_size
@@ -332,45 +324,14 @@ class Tui:
         return {"exit_status": 0}
 
     def commandedit(self, fill=""):
-        """ Fill commandwindow with string
+        """ Fill commandprompt with string
 
-        :param fill: str to be put on commandwindow, defaults to ""
+        :param fill: str to be put on commandprompt, defaults to ""
         """
-        self.commandwin.erase()
+        self.commandprompt.win.erase()
         curses.curs_set(2)
-        self.commandwin.addstr(0, 0, self.prefix[self.mode] + fill)
-        self.commandbox.edit(self._awaitenter)
-        self.commandwin.refresh()
-
-    def _awaitenter(self, x):
-        """ Helper function to be used in commandwin Textbox
-
-        :param x: key to be passed in by Textbox
-        """
-
-        if x == 10 or x == 13 or x == curses.KEY_ENTER:
-            if self.mode == "command":
-                self.handle_command(self.commandbox.gather()[1:])
-            elif self.mode == "search":
-                text = self.commandbox.gather().strip()[1:]
-                command = f"search {text}"
-                self.handle_command(command)
-            elif self.mode == "select":
-                option = self.commandbox.gather()[1:]
-                command = f"{self.command} -o {option}"
-                self.command = None
-                self.handle_command(command)
-
-            self.commandwin.erase()
-            self.mode = "normal"
-            curses.curs_set(0)
-
-        if x == 27:
-            self.commandwin.erase()
-            self.mode = "normal"
-            curses.curs_set(0)
-
-        return x
+        self.commandprompt.win.addstr(0, 0, self.prefix[self.mode] + fill)
+        self.commandprompt.edit()
 
     def run(self):
         """ Main function
@@ -712,8 +673,13 @@ class Tui:
             self.mode = "command"
         if args["string"] is not None:
             string = " ".join(args["string"])
-            self.commandedit(fill=string)
+            text = self.commandprompt.edit(prefill=string)
+            if text == "":
+                self.mode = "normal"
+            else:
+                self.handle_command(text)
 
+        return {"exit_status": 0}
         return {"exit_status": 0}
 
     def copy_to_clipboard(self, args=None):
