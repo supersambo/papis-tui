@@ -283,7 +283,7 @@ Some ideas I'd like to implement some day (in no particular order of relevance):
 - [ ] Handle known bugs (see below)
 - [X] Implement a general papis command
 - [ ] add options `--file` and `--notes` to `rm` command.
-- [ ] allow unicode input on command line
+- [X] allow unicode input on command line
 - [ ] save per session command history (access via `<key_up>`) on command line
 - [ ] Implement simple text completion on command line
 - [ ] Improve code readability (including type-hints)
