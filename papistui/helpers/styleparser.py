@@ -119,7 +119,17 @@ class StyleParser(HTMLParser):
         self.output = []
         if evaluate:
             string = self.evaluate(string, doc=doc, info=additional)
-        self.feed(string)
+        try:
+            self.feed(string)
+        except:
+            result = [{
+                "content": string,
+                "style": 0,
+                "posx": 0,
+                "len": len(string),
+                }]
+            return result
+
         result = []
         posx = 0
         for i in self.output:
