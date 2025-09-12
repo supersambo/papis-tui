@@ -154,5 +154,3 @@ class HelpWindow:
                     keychain = []
 
             self.display()
-
-
