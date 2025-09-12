@@ -1,6 +1,8 @@
 import argparse
 import re
 
+from papistui.helpers.config import get_config
+from papistui.helpers.keymappings import KeyMappings
 from papistui.helpers.styleparser import StyleParser
 
 
@@ -25,12 +27,15 @@ class HelpWindow:
         ]
         self.docpad = docpad
         self.linenr = None
-        self.win = None
         self.stdscr = stdscr
         self.keychain = None
         self.sizey = 0
         self.sizex = 0
         self._yoffset = 0
+
+        config = get_config()
+        km = ["scroll_down", "scroll_up", "jump_to_bottom", "jump_to_top", "quit"]
+        self.km = KeyMappings(config, filtered=km)
 
     @property
     def yoffset(self):
@@ -97,7 +102,6 @@ class HelpWindow:
         self.sizex = cols - 2
         self.sizey = rows - 2
         self.stdscr.erase()
-        # self.stdscr.clear()
         content = self.build_help(rows, cols)
         for idx, line in enumerate(
             content[self.yoffset : self.sizey + self.yoffset - 1]
@@ -114,3 +118,41 @@ class HelpWindow:
             )
 
         self.stdscr.refresh()
+
+    def run(self):
+        """Waiting an input and run a proper method according to type of input"""
+        keychain = []
+        self.display()
+
+        while True:
+            ch = self.stdscr.getch()
+            key = [ch] if len(keychain) == 0 else [*keychain, ch]
+
+            # Map key names to the corresponding actions
+            actions = [
+                ("scroll_down", self.scroll_down),
+                ("scroll_up", self.scroll_up),
+                ("jump_to_bottom", self.jump_to_bottom),
+                ("jump_to_top", self.jump_to_top),
+                ("quit", lambda: setattr(self, "active", False)),
+            ]
+
+            matched = False
+            for action_name, action in actions:
+                if self.km.check(action_name, key):
+                    action()
+                    keychain = []
+                    matched = True
+                    if action_name == "quit":
+                        return None
+                    break
+
+            if not matched:
+                if len(self.km.find(key)) > 0:
+                    keychain = key
+                else:
+                    keychain = []
+
+            self.display()
+
+

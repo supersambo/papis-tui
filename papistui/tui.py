@@ -152,9 +152,8 @@ class Tui:
     @mode.setter
     def mode(self, mode):
         self._mode = mode
-        if not self.helpwindow.active:
-            self.statusbar.mode = mode
-            self.statusbar.info = self.doclist.getinfo()
+        self.statusbar.mode = mode
+        self.statusbar.info = self.doclist.getinfo()
 
     @property
     def message(self):
@@ -266,26 +265,19 @@ class Tui:
         pdb.set_trace()
 
     def scroll_down(self, *args):
-        """ Scroll down in documentlist or helpwindow
+        """ Scroll down in documentlist
 
         :return dict with exit status
         """
-
-        if self.helpwindow.active:
-            self.helpwindow.scroll_down()
-        else:
-            self.doclist.scroll_down()
+        self.doclist.scroll_down()
         return {"exit_status": 0}
 
     def scroll_up(self, *args):
-        """ Scroll up in documentlist or helpwindow
+        """ Scroll up in documentlist
 
         :return dict with exit status
         """
-        if self.helpwindow.active:
-            self.helpwindow.scroll_up()
-        else:
-            self.doclist.scroll_up()
+        self.doclist.scroll_up()
         return {"exit_status": 0}
 
     def info_toggle(self, *args):
@@ -318,10 +310,7 @@ class Tui:
 
         :return dict with exit status
         """
-        if self.helpwindow.active:
-            self.helpwindow.jump_to_bottom()
-        else:
-            self.doclist.jump_to_bottom()
+        self.doclist.jump_to_bottom()
         return {"exit_status": 0}
 
     def jump_to_top(self, *args):
@@ -329,10 +318,7 @@ class Tui:
 
         :return dict with exit status
         """
-        if self.helpwindow.active:
-            self.helpwindow.jump_to_top()
-        else:
-            self.doclist.jump_to_top()
+        self.doclist.jump_to_top()
         return {"exit_status": 0}
 
     def commandedit(self, fill=""):
@@ -383,8 +369,7 @@ class Tui:
 
             if ch and not self.lock:
                 self.handle_keypress(ch)
-                if not self.helpwindow.active:
-                    self.statusbar.info = self.doclist.getinfo()
+                self.statusbar.info = self.doclist.getinfo()
 
             if self._quit:
                 break
@@ -401,27 +386,18 @@ class Tui:
             self.clean()
             self.keychain = []
             self.handle_command(match["cmd"])
-            if not self.helpwindow.active:
-                self.helpwindow.active = False
         else:
             options = self.km.find(key)
             if len(options) > 0:
                 self.keychain = key
-                if not self.helpwindow.active:
-                    self.keyinfo.display(self.doclist, options)
+                self.keyinfo.display(self.doclist, options)
             else:
                 self.keychain = []
                 self.commandinfo.destroy()
-                self.helpwindow.active = False
 
     def quit(self, *args):
-        """ Quit tui or helpwindow if active """
-
-        if self.helpwindow.active:
-            self.helpwindow.active = False
-            self.resize()
-        else:
-            self._quit = True
+        """ Quit tui """
+        self._quit = True
 
     def command_mode(self, *args):
         """ Change into command mode and enter textbox
@@ -475,7 +451,8 @@ class Tui:
     def raise_helpwindow(self, *args):
         """ Display Helpwindow """
 
-        self.helpwindow.display()
+        self.helpwindow.run()
+        self.resize()
         return {"exit_status": 0}
 
     def search(self, args=None):
@@ -742,26 +719,24 @@ class Tui:
                 result = args.func(args)  # call the default function
                 if result is None:  # try to avoid by returning exit status
                     self.commandinfo.destroy()
-                    if not self.helpwindow.active:
-                        self.doclist.display()
-                        self.statusbar.info = self.doclist.getinfo()
+                    self.doclist.display()
+                    self.statusbar.info = self.doclist.getinfo()
                     if self.infowindow.active:
                         self.infowindow.display()
                 elif result["exit_status"] == 0:
-                    if not self.helpwindow.active:
-                        if self.mode == "select":
-                            self.commandinfo.destroy()
-                            self.resize()
-                        self.mode = "normal"
+                    if self.mode == "select":
+                        self.commandinfo.destroy()
+                        self.resize()
+                    self.mode = "normal"
 
-                        self.doclist.display()
-                        self.statusbar.info = self.doclist.getinfo()
-                        if self.infowindow.active:
-                            self.infowindow.display()
-                        if "message" in result:
-                            self.message = result["message"]
-                        elif self.messagebar.active:
-                            self.messagebar.destroy()
+                    self.doclist.display()
+                    self.statusbar.info = self.doclist.getinfo()
+                    if self.infowindow.active:
+                        self.infowindow.display()
+                    if "message" in result:
+                        self.message = result["message"]
+                    elif self.messagebar.active:
+                        self.messagebar.destroy()
                 elif result["exit_status"] == 1:
                     self.command = command
                     self.raise_commandinfo(info=result["options"])
