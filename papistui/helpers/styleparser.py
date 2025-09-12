@@ -121,7 +121,7 @@ class StyleParser(HTMLParser):
             string = self.evaluate(string, doc=doc, info=additional)
         try:
             self.feed(string)
-        except:
+        except ValueError:
             result = [{
                 "content": string,
                 "style": 0,
@@ -282,10 +282,19 @@ class StyleParser(HTMLParser):
 
                 else:
                     startx = xoffset
-
-                screen.addstr(
-                    posy + idx, startx + p["posx"], p["content"][:cutoff], p["style"]
-                )
+                try:
+                    screen.addstr(
+                        posy + idx,
+                        startx + p["posx"],
+                        p["content"][:cutoff],
+                        p["style"]
+                    )
+                except curses.error:
+                    screen.addstr(
+                            posy + idx,
+                            startx + p["posx"],
+                            "<printerr>",
+                            self.compute_style("red"))
 
                 if xoffset + p["posx"] + p["len"] >= xmax:
                     break
