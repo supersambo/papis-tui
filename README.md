@@ -280,13 +280,11 @@ Here, `doc` resolves to the currently selected document and the `papis_id:...` s
 # Roadmap
 Some ideas I'd like to implement some day (in no particular order of relevance):
 
-- [ ] Handle known bugs (see below)
-- [X] Implement a general papis command
-- [ ] add options `--file` and `--notes` to `rm` command.
-- [X] allow unicode input on command line
 - [ ] save per session command history (access via `<key_up>`) on command line
 - [ ] Implement simple text completion on command line
-- [ ] Improve code readability (including type-hints)
+- [ ] add options `--file` and `--notes` to `rm` command.
+- [X] Implement a general papis command
+- [X] allow unicode input on command line
 - [ ] ~~Implement a plugin system~~ \*
 - [ ] ~~Implement papis `addto` command~~ \*\* 
 - [ ] ~~Implement papis `merge` command~~ \*\*
@@ -295,10 +293,6 @@ Some ideas I'd like to implement some day (in no particular order of relevance):
 
 \* *beware of feature creep*
 \*\* *let papis handle these*
-
-# Known bugs
-- papis-tui fails the first time after the papis cache was cleared (`papis --cc`). This makes papis-tui practically unusable if you have papis configured not to use the cache at all `use-cache = False`.
-- info window fails on some special characters (not sure which ones exactly), which causes papis-tui to crash completely
 
 # See also
 There are already quite a few document viewers/pickers, editor plugins for papis out there and there is even a built-in webapp:
