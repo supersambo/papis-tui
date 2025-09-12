@@ -443,10 +443,10 @@ class DocumentList:
 
         marked = [item for item in self.view if item in self.marked]
         if len(marked) > 0:
-            self.view = marked
             self.selected_win_idx = 0
-            self.top_idx = 0
+            self.view = marked
             self.bottom = len(self.view)
+            self.top_idx = 0
             return {"exit_status": 0}
         else:
             return {"exit_status": 2, "message": ("No documents marked", "error")}
