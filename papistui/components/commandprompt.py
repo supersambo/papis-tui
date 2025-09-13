@@ -49,9 +49,6 @@ class CommandPrompt:
                     if self.cursor_pos > 0:
                         del self.input_chars[self.cursor_pos - 1]
                         self.cursor_pos -= 1
-                elif ch == "\x1b":  # ESC
-                    self.input_chars = []
-                    break
                 else:
                     if len(self.input_chars) < self.maxlen:
                         self.input_chars.insert(self.cursor_pos, ch)
@@ -73,6 +70,8 @@ class CommandPrompt:
                 self.cursor_pos = 0
             elif ch == curses.KEY_END:
                 self.cursor_pos = len(self.input_chars)
+            elif ch == "\x1b":
+                pass
 
             self.display()
 
