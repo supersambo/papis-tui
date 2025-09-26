@@ -35,11 +35,11 @@ class History:
 
     def up(self):
         if self.list[self.mode]:
-                if self.index[self.mode] is None:
-                    self.index[self.mode] = len(self.list[self.mode]) - 1
-                elif self.index[self.mode] > 0:
-                    self.index[self.mode] -= 1
-        return list(self.list[self.mode][self.index[self.mode]])
+            if self.index[self.mode] is None:
+                self.index[self.mode] = len(self.list[self.mode]) - 1
+            elif self.index[self.mode] > 0:
+                self.index[self.mode] -= 1
+            return list(self.list[self.mode][self.index[self.mode]])
 
     def down(self):
         if self.list[self.mode] and self.index[self.mode] is not None:
