@@ -280,10 +280,10 @@ Here, `doc` resolves to the currently selected document and the `papis_id:...` s
 # Roadmap
 Some ideas I'd like to implement some day (in no particular order of relevance):
 
-- [ ] save per session command history (access via `<key_up>`) on command line
 - [ ] Implement simple text completion on command line
 - [ ] add options `--file` and `--notes` to `rm` command.
 - [X] Implement a general papis command
+- [X] save per session command history (access via `<key_up>`) on command line
 - [X] allow unicode input on command line
 - [ ] ~~Implement a plugin system~~ \*
 - [ ] ~~Implement papis `addto` command~~ \*\* 
