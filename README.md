@@ -193,7 +193,8 @@ statusbar:
 ```
 In the above case papis-tui would fall back to the specified default mode, when in `select` mode, because no configuration for this mode is available.
 
-## search keyword aliases
+## Command Prompt
+### search keyword aliases
 Search keyword aliases allow typing queries faster. Instead of typing `author: habermas` you might define an alias `a` for `author:`, `t` for `title:` etc.
 
 ```yaml
@@ -203,6 +204,19 @@ commandline:
 ```
 
 With this configuration in place the query `a habermas` gets automatically translated to `author: habermas` before being evaluated.
+
+### prompt history
+The prompt provides a history of the last commands and search terms that where used. The history can be accessed via `key up` and `key down`. File paths for storing history between sessions can be specified in the configuration file as follows.
+
+```yaml
+commandline:
+  history:
+    search_file: "/path/to/your/.papis_tui_search_history"
+    command_file: "/path/to/your/.papis_tui_command_history"
+```
+```
+
+If no history files are configured, the history will be lost after closing a session.
 
 ## info window
 The info window is located below the documentlist and can be toggled on and of (set `default_on: True` to open it at startup). It is mainly intended for displaying the abstract of the selected document, but of course can be configured to be display something else. You can define as many different views as you want, each one requires a title and `content` field at least. Individual window heights can also be defined and as well as whether content should be linewrapped.
