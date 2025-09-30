@@ -83,8 +83,6 @@ class Tui:
         self.commandinfo = CommandInfo(self.stdscr)
         self.command = None
 
-        # CommandPrompt
-        self.commandprompt = CommandPrompt(self.stdscr, self.config)
 
         # InfoWindow
         self.infowindow = InfoWindow(self.stdscr, self.config)
@@ -121,6 +119,13 @@ class Tui:
         # argparse
         self.argstream = io.StringIO("", "\n")
         self.setup_parser()
+
+        # CommandPrompt
+        self.commandprompt = CommandPrompt(
+            stdscr=self.stdscr,
+            config=self.config,
+            commandparser=self.commandparser,
+        )
 
         # HelpWindow
         self.helpwindow = HelpWindow(
@@ -988,7 +993,7 @@ class Tui:
         )
         copy_to_clipboard.set_defaults(func=self.copy_to_clipboard)
 
-        edit = subparsers.add_parser("edit", aliases=["e"], description="Edit document")
+        edit = subparsers.add_parser("edit", description="Edit document")
         edit.set_defaults(func=self.edit)
 
         browse = subparsers.add_parser("browse", description="Browse document")

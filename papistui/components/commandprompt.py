@@ -1,6 +1,7 @@
 import curses
 import locale
 import os
+import shlex
 
 from wcwidth import wcwidth  # pip install wcwidth
 
@@ -60,9 +61,112 @@ class History:
             with open(self.file[mode], "a") as f:
                 f.write(command + "\n")
 
+class AutoCompleter:
+    def __init__(self, config, commandparser):
+        self.ghosts = []
+        self.mode = "command"
+        self.commandparser = commandparser
+        self.list = {"command": [], "search": []}
+        self.index = 0
+
+        self.list["command"] += self.argparse_to_strings()
+
+    @property
+    def ghost(self):
+        try:
+            return self.ghosts[self.index]
+        except IndexError:
+            self.index = 0
+            if len(self.ghosts) > 0:
+                self.ghosts[self.index]
+            else:
+                return ""
+
+    def next(self):
+        if len(self.ghosts)-1 > self.index:
+            self.index += 1
+        else:
+            self.index = 0
+
+    def argparse_to_strings(self, include_options=True, include_values=True):
+        """
+        Generate a flat list of possible commands and their options from argparse.
+
+        :param include_options: if True, include option flags for each command
+        :param include_values:  if True, append a trailing space to options
+                                that expect a value
+        :return: list of strings
+        """
+        parser = self.commandparser
+        strings = []
+
+        for action in parser._subparsers._group_actions:
+            for cmd, subparser in action.choices.items():
+                # base command
+                strings.append(cmd)
+
+                if include_options:
+                    for opt_action in subparser._actions:
+                        for opt in opt_action.option_strings:
+                            if include_values and opt_action.nargs not in (0, None):
+                                strings.append(f"{cmd} {opt} ")
+                            else:
+                                strings.append(f"{cmd} {opt}")
+
+        return strings
+
+    def get_completions(self, text, full=False):
+        """
+        Return possible completions based on the current token
+        against self.completion_list.
+
+        :param text: current input string
+        :param full: if True, return full candidates (e.g. 'open -d')
+                    if False, return only ghost suffix for current token
+        :return: list of completions
+        """
+        if not text:
+            self.ghosts = []
+            return None
+
+        tokens = shlex.split(text, posix=True)
+        if text.endswith(" "):
+            tokens.append("")
+
+        last = tokens[-1]
+
+        completions = []
+
+        for candidate in self.list[self.mode]:
+            cand_tokens = candidate.split()
+
+            # Only consider candidates with at least as many tokens
+            if len(tokens) > len(cand_tokens):
+                continue
+
+            # Prefix of candidate must match typed tokens (except last)
+            if tokens[:-1] != cand_tokens[:len(tokens)-1]:
+                continue
+
+            # Now compare last token against the corresponding candidate token
+            cand_token = cand_tokens[len(tokens)-1]
+            if cand_token.startswith(last):
+                if full:
+                    completions.append(candidate)
+                else:
+                    completions.append(cand_token[len(last):])
+
+        # Deduplicate while preserving order
+        seen = set()
+        unique = []
+        for c in completions:
+            if c not in seen:
+                seen.add(c)
+                unique.append(c)
+        self.ghosts = unique
 
 class CommandPrompt:
-    def __init__(self, stdscr, config, maxlen=100):
+    def __init__(self, stdscr, config, commandparser, maxlen=100):
         self.stdscr = stdscr
         self.maxlen = maxlen
         self.cursor_pos = 0
@@ -70,7 +174,9 @@ class CommandPrompt:
         self.win = curses.newwin(1, x, y - 1, 0)
         self.win.keypad(True)
         self.history = History(config)
+        self.autocomp = AutoCompleter(config, commandparser)
         self._mode = None
+        self.commandparser = commandparser
 
     @property
     def mode(self):
@@ -80,15 +186,19 @@ class CommandPrompt:
     def mode(self, mode):
         self._mode = mode
         self.history.mode = mode
-
+        self.autocomp.mode = mode
 
     def display(self):
         self.win.erase()  # Clear only this line
-        line = f"{self.prompt}{''.join(self.input_chars)}"
+        text = ''.join(self.input_chars)
+        self.autocomp.get_completions(text)
+        line = f"{self.prompt}{text}"
         self.win.addstr(0, 0, line)
         cursor_x = len(self.prompt) + self._display_width(
             self.input_chars[: self.cursor_pos]
         )
+        if self.autocomp.ghost != "":
+            self.win.addstr(0, len(self.input_chars) + 1 , self.autocomp.ghost, curses.A_DIM)
         self.win.move(0, cursor_x)
         self.win.refresh()
 
@@ -127,6 +237,8 @@ class CommandPrompt:
                     if self.cursor_pos > 0:
                         del self.input_chars[self.cursor_pos - 1]
                         self.cursor_pos -= 1
+                elif ch == "\t":
+                    self.autocomp.next()
                 elif ch == "\x1b":  # ESC pressed
                     # check if it's really ESC alone (cancel)
                     self.win.nodelay(True)
@@ -157,6 +269,9 @@ class CommandPrompt:
             elif ch == curses.KEY_RIGHT:
                 if self.cursor_pos < len(self.input_chars):
                     self.cursor_pos += 1
+                elif self.cursor_pos == len(self.input_chars):
+                    self.input_chars += list(self.autocomp.ghost)
+                    self.cursor_pos = len(self.input_chars)
             elif ch == curses.KEY_DC:
                 if self.cursor_pos < len(self.input_chars):
                     del self.input_chars[self.cursor_pos]
