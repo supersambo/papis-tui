@@ -83,7 +83,6 @@ class Tui:
         self.commandinfo = CommandInfo(self.stdscr)
         self.command = None
 
-
         # InfoWindow
         self.infowindow = InfoWindow(self.stdscr, self.config)
 
@@ -331,7 +330,7 @@ class Tui:
 
         :param fill: str to be put on commandprompt, defaults to ""
         """
-        self.commandprompt.edit(mode = self.mode, prefill = fill)
+        self.commandprompt.edit(mode=self.mode, prefill=fill)
 
     def run(self):
         """ Main function
@@ -664,7 +663,7 @@ class Tui:
             self.mode = "command"
         if args["string"] is not None:
             string = " ".join(args["string"])
-            text = self.commandprompt.edit(mode=self.mode, prefill = string)
+            text = self.commandprompt.edit(mode=self.mode, prefill=string)
             if text == "":
                 self.mode = "normal"
             else:

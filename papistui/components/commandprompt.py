@@ -7,18 +7,20 @@ from wcwidth import wcwidth  # pip install wcwidth
 
 locale.setlocale(locale.LC_ALL, "")  # Make sure Unicode works properly
 
+
 class History:
+
     def __init__(self, config):
         self.list = {"command": [], "search": []}
         self.index = {"command": None, "search": None}
         self.file = {"command": None, "search": None}
         self.mode = "command"
 
-        #init  history for search and command
+        # init  history for search and command
         for mode in ["command", "search"]:
             try:
                 path = config["commandline"]["history"][f"{mode}_file"]
-                with open(path, "r") as f:
+                with open(path) as f:
                     self.list[mode] = [line.strip() for line in f if line.strip()]
                 self.file[mode] = path
             except FileNotFoundError:
@@ -61,6 +63,7 @@ class History:
             with open(self.file[mode], "a") as f:
                 f.write(command + "\n")
 
+
 class AutoCompleter:
     def __init__(self, config, commandparser):
         self.ghosts = []
@@ -83,7 +86,7 @@ class AutoCompleter:
                 return ""
 
     def next(self):
-        if len(self.ghosts)-1 > self.index:
+        if len(self.ghosts) - 1 > self.index:
             self.index += 1
         else:
             self.index = 0
@@ -145,11 +148,11 @@ class AutoCompleter:
                 continue
 
             # Prefix of candidate must match typed tokens (except last)
-            if tokens[:-1] != cand_tokens[:len(tokens)-1]:
+            if tokens[:-1] != cand_tokens[:len(tokens) - 1]:
                 continue
 
             # Now compare last token against the corresponding candidate token
-            cand_token = cand_tokens[len(tokens)-1]
+            cand_token = cand_tokens[len(tokens) - 1]
             if cand_token.startswith(last):
                 if full:
                     completions.append(candidate)
@@ -164,6 +167,7 @@ class AutoCompleter:
                 seen.add(c)
                 unique.append(c)
         self.ghosts = unique
+
 
 class CommandPrompt:
     def __init__(self, stdscr, config, commandparser, maxlen=100):
@@ -190,7 +194,7 @@ class CommandPrompt:
 
     def display(self):
         self.win.erase()  # Clear only this line
-        text = ''.join(self.input_chars)
+        text = "".join(self.input_chars)
         self.autocomp.get_completions(text)
         line = f"{self.prompt}{text}"
         self.win.addstr(0, 0, line)
@@ -198,7 +202,8 @@ class CommandPrompt:
             self.input_chars[: self.cursor_pos]
         )
         if self.autocomp.ghost != "":
-            self.win.addstr(0, len(self.input_chars) + 1 , self.autocomp.ghost, curses.A_DIM)
+            self.win.addstr(0, len(self.input_chars) + 1,
+                            self.autocomp.ghost, curses.A_DIM)
         self.win.move(0, cursor_x)
         self.win.refresh()
 
