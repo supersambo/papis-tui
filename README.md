@@ -214,7 +214,7 @@ commandline:
     search_file: "/path/to/your/.papis_tui_search_history"
     command_file: "/path/to/your/.papis_tui_command_history"
 ```
-```
+
 
 If no history files are configured, the history will be lost after closing a session.
 
@@ -231,6 +231,8 @@ infowindow:
       height: 8
     apa:
       content: "{format_reference(doc)}"
+```
+```
 ```
 
 The `:info_toggle` command can be used to toggle the window on or off and views be changed with `:info_cycle`. You can scroll up the info_window up or down using `:info_scroll_up` and `:info_scroll_down`.
@@ -294,8 +296,8 @@ Here, `doc` resolves to the currently selected document and the `papis_id:...` s
 # Roadmap
 Some ideas I'd like to implement some day (in no particular order of relevance):
 
-- [ ] Implement simple text completion on command line
 - [ ] add options `--file` and `--notes` to `rm` command.
+- [X] Implement simple text completion on command line
 - [X] Implement a general papis command
 - [X] save per session command history (access via `<key_up>`) on command line
 - [X] allow unicode input on command line
@@ -306,6 +308,7 @@ Some ideas I'd like to implement some day (in no particular order of relevance):
 - [ ] ~~Implement papis `update` command~~ \*\*
 
 \* *beware of feature creep*
+
 \*\* *let papis handle these*
 
 # See also
