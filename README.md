@@ -206,7 +206,7 @@ commandline:
 With this configuration in place the query `a habermas` gets automatically translated to `author: habermas` before being evaluated.
 
 ### prompt history
-The prompt provides a history of the last commands and search terms that where used. The history can be accessed via `key up` and `key down`. File paths for storing history between sessions can be specified in the configuration file as follows.
+The prompt provides a history of the last commands and search terms that were used. This history can be accessed with the `up` and `down` keys. File paths for storing the history between sessions can be specified in the configuration file as follows:
 
 ```yaml
 commandline:
@@ -214,7 +214,6 @@ commandline:
     search_file: "/path/to/your/.papis_tui_search_history"
     command_file: "/path/to/your/.papis_tui_command_history"
 ```
-
 
 If no history files are configured, the history will be lost after closing a session.
 
