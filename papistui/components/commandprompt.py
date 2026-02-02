@@ -180,7 +180,7 @@ class CommandPrompt:
         self.autocomp = AutoCompleter(config, commandparser)
         self._mode = None
         self.commandparser = commandparser
-        self._size = {"posy": y-1, "posx": 0, "sizey": 1, "sizex": x}
+        self._size = {"posy": y - 1, "posx": 0, "sizey": 1, "sizex": x}
         self.display_range = (None, None)
         self.cursor = {"display": 0, "input": 0}
 
@@ -193,7 +193,7 @@ class CommandPrompt:
         self._mode = mode
         self.history.mode = mode
         self.autocomp.mode = mode
- 
+
     @property
     def size(self):
         return self._size
@@ -208,10 +208,6 @@ class CommandPrompt:
 
     @property
     def display_chars(self):
-        # if self.cursor_pos >= self.size["sizex"]-2 and self._display_width(self.input_chars) >= self.size["sizex"]-2:
-        #     result = self.input_chars[-self.size["sizex"]+2:]
-        # else:
-        #     result = self.input_chars
         return self.input_chars[self.display_range[0]:self.display_range[1]]
 
     def display(self):
@@ -226,7 +222,7 @@ class CommandPrompt:
         cursor_x = len(self.prompt) + self._display_width(
             self.input_chars[: self.cursor["input"]]
         )
-        if not cursor_x > self.size["sizex"]-1:
+        if not cursor_x > self.size["sizex"] - 1:
             self.win.move(0, cursor_x)
         self.win.refresh()
 
