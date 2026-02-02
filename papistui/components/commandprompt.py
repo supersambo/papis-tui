@@ -128,7 +128,7 @@ class AutoCompleter:
                     if False, return only ghost suffix for current token
         :return: list of completions
         """
-        if not text:
+        if not text or text.isspace():
             self.ghosts = []
             return None
 
@@ -170,9 +170,8 @@ class AutoCompleter:
 
 
 class CommandPrompt:
-    def __init__(self, stdscr, config, commandparser, maxlen=100):
+    def __init__(self, stdscr, config, commandparser):
         self.stdscr = stdscr
-        self.maxlen = maxlen
         self.cursor_pos = 0
         y, x = self.stdscr.getmaxyx()
         self.win = curses.newwin(1, x, y - 1, 0)
@@ -181,6 +180,9 @@ class CommandPrompt:
         self.autocomp = AutoCompleter(config, commandparser)
         self._mode = None
         self.commandparser = commandparser
+        self._size = {"posy": y-1, "posx": 0, "sizey": 1, "sizex": x}
+        self.display_range = (None, None)
+        self.cursor = {"display": 0, "input": 0}
 
     @property
     def mode(self):
@@ -191,20 +193,41 @@ class CommandPrompt:
         self._mode = mode
         self.history.mode = mode
         self.autocomp.mode = mode
+ 
+    @property
+    def size(self):
+        return self._size
+
+    @size.setter
+    def size(self, size):
+        self._size = size
+        self.win.mvwin(size["posy"], size["posx"])
+        self.win.resize(size["sizey"], size["sizex"])
+        # change input str here if text doesnt fit
+        self.display()
+
+    @property
+    def display_chars(self):
+        # if self.cursor_pos >= self.size["sizex"]-2 and self._display_width(self.input_chars) >= self.size["sizex"]-2:
+        #     result = self.input_chars[-self.size["sizex"]+2:]
+        # else:
+        #     result = self.input_chars
+        return self.input_chars[self.display_range[0]:self.display_range[1]]
 
     def display(self):
         self.win.erase()  # Clear only this line
-        text = "".join(self.input_chars)
+        text = "".join(self.display_chars)
         self.autocomp.get_completions(text)
         line = f"{self.prompt}{text}"
         self.win.addstr(0, 0, line)
-        cursor_x = len(self.prompt) + self._display_width(
-            self.input_chars[: self.cursor_pos]
-        )
         if self.autocomp.ghost != "":
-            self.win.addstr(0, len(self.input_chars) + 1,
+            self.win.addstr(0, len(self.display_chars) + 1,
                             self.autocomp.ghost, curses.A_DIM)
-        self.win.move(0, cursor_x)
+        cursor_x = len(self.prompt) + self._display_width(
+            self.input_chars[: self.cursor["input"]]
+        )
+        if not cursor_x > self.size["sizex"]-1:
+            self.win.move(0, cursor_x)
         self.win.refresh()
 
     def clear(self):
@@ -224,7 +247,7 @@ class CommandPrompt:
             self.prompt = "/"
         else:
             self.prompt = ""
-        self.cursor_pos = len(self.input_chars)
+        self.cursor["input"] = self._display_width(self.input_chars)
         self.win.erase()
         self.win.keypad(True)         # make arrow keys work
         curses.curs_set(1)            # show cursor while editing
@@ -239,9 +262,9 @@ class CommandPrompt:
                     self.history.save(command, self.mode)
                     break
                 elif ch in ("\x08", "\x7f"):  # Backspace: BS or DEL
-                    if self.cursor_pos > 0:
-                        del self.input_chars[self.cursor_pos - 1]
-                        self.cursor_pos -= 1
+                    if self.cursor > 0:
+                        del self.input_chars[self.cursor["input"] - 1]
+                        self.cursor["input"] -= 1
                 elif ch == "\t":
                     self.autocomp.next()
                 elif ch == "\x1b":  # ESC pressed
@@ -260,40 +283,39 @@ class CommandPrompt:
                         # put it back for curses to interpret
                         curses.unget_wch(nxt)
                 else:
-                    if len(self.input_chars) < self.maxlen:
-                        self.input_chars.insert(self.cursor_pos, ch)
-                        self.cursor_pos += 1
+                    self.input_chars.insert(self.cursor["input"], ch)
+                    self.cursor["input"] += 1
 
             elif ch in (curses.KEY_BACKSPACE, 127):
-                if self.cursor_pos > 0:
-                    del self.input_chars[self.cursor_pos - 1]
-                    self.cursor_pos -= 1
+                if self.cursor["input"] > 0:
+                    del self.input_chars[self.cursor["input"] - 1]
+                    self.cursor["input"] -= 1
             elif ch == curses.KEY_LEFT:
-                if self.cursor_pos > 0:
-                    self.cursor_pos -= 1
+                if self.cursor["input"] > 0:
+                    self.cursor["input"] -= 1
             elif ch == curses.KEY_RIGHT:
-                if self.cursor_pos < len(self.input_chars):
-                    self.cursor_pos += 1
-                elif self.cursor_pos == len(self.input_chars):
+                if self.cursor["input"] < len(self.input_chars):
+                    self.cursor["input"] += 1
+                elif self.cursor["input"] == len(self.input_chars):
                     self.input_chars += list(self.autocomp.ghost)
-                    self.cursor_pos = len(self.input_chars)
+                    self.cursor["input"] = len(self.input_chars)
             elif ch == curses.KEY_DC:
-                if self.cursor_pos < len(self.input_chars):
-                    del self.input_chars[self.cursor_pos]
+                if self.cursor["input"] < len(self.input_chars):
+                    del self.input_chars[self.cursor["input"]]
             elif ch == curses.KEY_HOME:
-                self.cursor_pos = 0
+                self.cursor["input"] = 0
             elif ch == curses.KEY_END:
-                self.cursor_pos = len(self.input_chars)
+                self.cursor["input"] = len(self.input_chars)
             elif ch == curses.KEY_UP:
                 replacement = self.history.up()
                 if replacement:
                     self.input_chars = replacement
-                    self.cursor_pos = len(self.input_chars)
+                    self.cursor["input"] = len(self.input_chars)
             elif ch == curses.KEY_DOWN:
                 replacement = self.history.down()
                 if replacement is not None:
                     self.input_chars = replacement
-                    self.cursor_pos = len(self.input_chars)
+                    self.cursor["input"] = len(self.input_chars)
 
             self.display()
 
