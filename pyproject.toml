@@ -57,7 +57,7 @@ develop = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["papis"]
+packages = ["papistui"]
 
 [project.scripts]
 papis-tui = "papistui.main:run"
