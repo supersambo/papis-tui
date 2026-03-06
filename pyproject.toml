@@ -31,16 +31,21 @@ classifiers = [
     "Operating System :: Unix",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Utilities",
 ]
 dependencies = [
+    "click",
     "neovim-remote",
     "papis>=0.12",
+    "psutil",
     "pybtex",
     "pyperclip",
+    "pyyaml",
+    "wcwidth",
 ]
 
 [project.urls]
