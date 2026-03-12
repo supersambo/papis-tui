@@ -342,8 +342,9 @@ class Tui:
             self.input_stream()
         except KeyboardInterrupt:
             pass
+        finally:
+            curses.endwin()
 
-        curses.endwin()
         if self.picker and self.picked:
             return self.doclist.selected_doc
 
