@@ -148,6 +148,10 @@ def complete_config(config):
     if "infowindow" not in config:
         config["infowindow"] = {}
 
+    if "commandline" not in config:
+        config["commandline"] = {}
+    config["commandline"].setdefault("ghoststyle", "dim")
+
     config["infowindow"].setdefault("default_on", False)
 
     return config

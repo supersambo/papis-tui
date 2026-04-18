@@ -3,7 +3,9 @@ import locale
 import os
 import shlex
 
-from wcwidth import wcwidth  # pip install wcwidth
+from wcwidth import wcwidth
+
+from papistui.helpers.styleparser import StyleParser
 
 locale.setlocale(locale.LC_ALL, "")  # Make sure Unicode works properly
 
@@ -183,6 +185,9 @@ class CommandPrompt:
         self._size = {"posy": y - 1, "posx": 0, "sizey": 1, "sizex": x}
         self.display_range = (None, None)
         self.cursor = {"display": 0, "input": 0}
+        self.ghoststyle = StyleParser().compute_style(
+            config["commandline"]["ghoststyle"]
+        )
 
     @property
     def mode(self):
@@ -218,7 +223,7 @@ class CommandPrompt:
         self.win.addstr(0, 0, line)
         if self.autocomp.ghost != "":
             self.win.addstr(0, len(self.display_chars) + 1,
-                            self.autocomp.ghost, curses.A_DIM)
+                            self.autocomp.ghost, self.ghoststyle)
         cursor_x = len(self.prompt) + self._display_width(
             self.input_chars[: self.cursor["input"]]
         )
