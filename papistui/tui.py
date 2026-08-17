@@ -715,7 +715,11 @@ class Tui:
         if command.startswith("papis "):
             self.papis_cmd(command)
         else:
-            commands = shlex.split(command.strip())
+            try:
+                commands = shlex.split(command.strip())
+            except ValueError as e:
+                self.message = (str(e), "error")
+                return
             try:
                 args = self.commandparser.parse_args(commands)
                 result = args.func(args)  # call the default function
@@ -804,7 +808,11 @@ class Tui:
             command,
             doc=self.doclist.selected_doc,
             docs=self.doclist.marked)
-        cmd = shlex.split(string)
+        try:
+            cmd = shlex.split(string)
+        except ValueError as e:
+            self.message = (str(e), "error")
+            return
 
         curses.endwin()
 

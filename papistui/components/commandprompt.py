@@ -134,7 +134,11 @@ class AutoCompleter:
             self.ghosts = []
             return None
 
-        tokens = shlex.split(text, posix=True)
+        try:
+            tokens = shlex.split(text, posix=True)
+        except ValueError:
+            self.ghosts = []
+            return None
         if text.endswith(" "):
             tokens.append("")
 
