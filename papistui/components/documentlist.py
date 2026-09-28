@@ -2,7 +2,7 @@ import curses
 import re
 
 from papis.database.cache import match_document
-from papis.docmatcher import DocMatcher
+from papis.docmatcher import DocumentMatcher
 from papistui.features.sorting import sort_multiple_keys
 from papistui.helpers.styleparser import StyleParser
 
