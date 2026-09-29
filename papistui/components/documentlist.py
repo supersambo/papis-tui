@@ -1,8 +1,8 @@
 import curses
 import re
 
-from papis.database.cache import match_document
-from papis.docmatcher import DocumentMatcher
+from lark.exceptions import LarkError
+from papis.docmatcher import make_document_matcher
 from papistui.features.sorting import sort_multiple_keys
 from papistui.helpers.styleparser import StyleParser
 
@@ -482,12 +482,15 @@ class DocumentList:
             regex = r"\b" + re.escape(alias) + r"\b"
             query = re.sub(regex, aliases[alias], query)
 
-        DocMatcher.set_matcher(match_document)
-        DocMatcher.parse(query)
-        self.results = []
-        for item in self.items:
-            if DocMatcher.return_if_match(item) is not None:
-                self.results.append(item)
+        try:
+            matcher = make_document_matcher(query)
+        except LarkError:
+            return {
+                "exit_status": 2,
+                "message": ("Invalid search query", "error"),
+            }
+ 
+        self.results = [item for item in self.items if matcher(item)]
         if len(self.results) > 0:
             self.selected_win_idx = 0
             self.view = self.results

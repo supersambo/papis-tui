@@ -40,7 +40,7 @@ classifiers = [
 dependencies = [
     "click",
     "neovim-remote",
-    "papis>=0.12",
+    "papis>=0.16.0",
     "psutil",
     "pybtex",
     "pyperclip",
